@@ -1,65 +1,146 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useState } from 'react';
+import Navbar from './components/Navbar';
+import HeroSection from './components/HeroSection';
+import DestinationsSection from './components/DestinationsSection';
+import CulinarySection from './components/CulinarySection';
+import CultureSection from './components/CultureSection';
+import Footer from './components/Footer';
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time for smooth entrance
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // Smooth reveal animation on scroll
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [isLoading]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      {/* Loading Screen */}
+      <div className={`loader ${!isLoading ? 'hidden' : ''}`}>
+        <div className="loader-content">
+          <div className="loader-logo">
+            <span style={{ color: 'var(--foreground)' }}>Jak</span>
+            <span className="gradient-text">Spot</span>
+          </div>
+          <p style={{
+            color: 'var(--text-muted)',
+            marginTop: '16px',
+            fontSize: '0.9rem'
+          }}>
+            Memuat pengalaman Jakarta...
           </p>
+
+          {/* Loading Bar */}
+          <div style={{
+            width: '200px',
+            height: '4px',
+            background: 'var(--dark-surface-2)',
+            borderRadius: '2px',
+            marginTop: '24px',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              width: '100%',
+              height: '100%',
+              background: 'var(--gradient-1)',
+              borderRadius: '2px',
+              animation: 'loadingBar 2s ease-in-out'
+            }} />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Main Content */}
+      {!isLoading && (
+        <div style={{ opacity: 1, transition: 'opacity 0.5s ease' }}>
+          <Navbar />
+          <main>
+            <HeroSection />
+            <DestinationsSection />
+            <CulinarySection />
+            <CultureSection />
+          </main>
+          <Footer />
         </div>
-      </main>
-    </div>
+      )}
+
+      {/* Global Styles */}
+      <style jsx global>{`
+        @keyframes loadingBar {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(0); }
+        }
+
+        /* Smooth scroll for anchor links */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+          #culture > div > div:last-child {
+            grid-template-columns: 1fr !important;
+          }
+
+          #culture > div > div:last-child > div:first-child {
+            grid-column: span 12 !important;
+          }
+
+          #culture > div > div:last-child > div:last-child {
+            grid-column: span 12 !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-section {
+            min-height: 100svh;
+          }
+
+          #destinations .card {
+            height: 350px !important;
+          }
+
+          #culinary > div > div:last-child > div {
+            min-width: 280px !important;
+          }
+
+          #culture > div > div:last-child {
+            display: flex !important;
+            flex-direction: column !important;
+          }
+
+          #culture > div > div:last-child > div:first-child {
+            height: 400px !important;
+          }
+        }
+      `}</style>
+    </>
   );
 }
