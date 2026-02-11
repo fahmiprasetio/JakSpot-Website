@@ -40,8 +40,8 @@ const HeroSection = () => {
                 ref={layer1Ref}
                 className="hero-bg-layer"
                 style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=2000&q=80')`,
-                    filter: 'brightness(0.3) saturate(1.2)',
+                    backgroundImage: `url('/Hero-Section Jakspot.png')`,
+                    filter: 'brightness(0.6) saturate(1.2)',
                     transform: 'scale(1.1)'
                 }}
             />
@@ -52,7 +52,7 @@ const HeroSection = () => {
                 style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'linear-gradient(180deg, rgba(10, 10, 15, 0.4) 0%, rgba(10, 10, 15, 0.6) 50%, rgba(10, 10, 15, 1) 100%)',
+                    background: 'linear-gradient(180deg, rgba(10, 10, 15, 0.1) 0%, rgba(10, 10, 15, 0.35) 50%, rgba(10, 10, 15, 0.95) 100%)',
                     zIndex: 2
                 }}
             />
