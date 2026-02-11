@@ -41,7 +41,7 @@ const HeroSection = () => {
                 className="hero-bg-layer"
                 style={{
                     backgroundImage: `url('/Hero-Section Jakspot.png')`,
-                    filter: 'brightness(0.6) saturate(1.2)',
+                    filter: 'brightness(0.75) saturate(1.2)',
                     transform: 'scale(1.1)'
                 }}
             />
@@ -90,13 +90,9 @@ const HeroSection = () => {
             {/* Hero Content */}
             <div ref={contentRef} className="hero-content" style={{ zIndex: 10 }}>
 
-                <h1 className="hero-title fade-in-up" style={{ animationDelay: '0.4s' }}>
-                    <span className="split-line">
-                        <span>Jelajahi</span>
-                    </span>
-                    <span className="gradient-text split-line">
-                        <span style={{ animationDelay: '0.1s' }}>Jakarta</span>
-                    </span>
+                <h1 className="hero-title fade-in-up" style={{ animationDelay: '0.4s', marginBottom: '16px' }}>
+                    Jelajahi{' '}
+                    <span className="gradient-text">Jakarta</span>
                 </h1>
 
                 <p className="hero-description fade-in-up" style={{ animationDelay: '0.6s' }}>
@@ -107,72 +103,38 @@ const HeroSection = () => {
 
                 <div className="fade-in-up" style={{
                     display: 'flex',
-                    gap: '16px',
-                    justifyContent: 'center',
+                    gap: '12px',
                     flexWrap: 'wrap',
                     animationDelay: '0.8s'
                 }}>
-                    <a href="#destinations" className="btn-primary" style={{ textDecoration: 'none' }}>
+                    <a href="#destinations" className="btn-primary" style={{
+                        textDecoration: 'none',
+                        fontSize: '0.85rem',
+                        padding: '12px 24px'
+                    }}>
                         Mulai Eksplorasi
                         <svg
-                            width="20"
-                            height="20"
+                            width="16"
+                            height="16"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
-                            style={{ marginLeft: '8px', display: 'inline' }}
+                            style={{ marginLeft: '6px', display: 'inline' }}
                         >
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </a>
-                    <a href="#culture" className="btn-secondary" style={{ textDecoration: 'none' }}>
+                    <a href="#culture" className="btn-secondary" style={{
+                        textDecoration: 'none',
+                        fontSize: '0.85rem',
+                        padding: '12px 24px'
+                    }}>
                         Lihat Video
                     </a>
                 </div>
-
-                {/* Stats */}
-                <div className="fade-in-up" style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '60px',
-                    marginTop: '80px',
-                    flexWrap: 'wrap',
-                    animationDelay: '1s'
-                }}>
-                    {[
-                        { number: '10M+', label: 'Penduduk' },
-                        { number: '500+', label: 'Destinasi Wisata' },
-                        { number: '100+', label: 'Kuliner Khas' },
-                    ].map((stat, index) => (
-                        <div key={index} style={{ textAlign: 'center' }}>
-                            <div style={{
-                                fontFamily: 'var(--font-display)',
-                                fontSize: '2.5rem',
-                                fontWeight: '700',
-                                color: 'var(--primary)'
-                            }}>
-                                {stat.number}
-                            </div>
-                            <div style={{
-                                fontSize: '0.9rem',
-                                color: 'var(--text-muted)',
-                                marginTop: '4px'
-                            }}>
-                                {stat.label}
-                            </div>
-                        </div>
-                    ))}
-                </div>
             </div>
 
-            {/* Scroll Indicator */}
-            <div className="scroll-indicator fade-in-up" style={{ animationDelay: '1.2s', zIndex: 10 }}>
-                <div className="mouse">
-                    <div className="wheel" />
-                </div>
-                <span>Scroll ke bawah</span>
-            </div>
         </section>
     );
 };
