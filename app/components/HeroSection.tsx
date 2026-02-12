@@ -14,24 +14,24 @@ const getFrameSrc = (index: number): string => {
 // Text slides that appear at different scroll points
 const textSlides = [
     {
-        title: 'Jelajahi',
-        highlight: 'Jakarta',
-        description: 'Kota metropolitan terbesar di Asia Tenggara yang penuh pesona dan kejutan di setiap sudutnya.',
+        title: 'Jakarta Tuh',
+        highlight: 'Beda',
+        description: 'Bukan cuma macet dan gedung tinggi — kota ini punya sisi yang lo belum pernah liat.',
     },
     {
-        title: 'Warisan',
-        highlight: 'Budaya',
-        description: 'Dari Ondel-Ondel hingga Lenong, nikmati kekayaan budaya Betawi yang masih hidup dan lestari.',
+        title: 'Spot yang',
+        highlight: 'Anti Mainstream',
+        description: 'Lupain tempat wisata yang itu-itu aja. Kita kasih lo hidden gems yang beneran worth it.',
     },
     {
-        title: 'Cita Rasa',
-        highlight: 'Nusantara',
-        description: 'Kerak telor, soto Betawi, hingga gado-gado — surganya kuliner autentik yang menggugah selera.',
+        title: 'Jajan Enak',
+        highlight: 'Gak Pasaran',
+        description: 'Dari street food gang kecil sampe cafe aesthetic — yang lo gak bakal nemuin di Google.',
     },
     {
-        title: 'Mulai',
-        highlight: 'Petualangan',
-        description: 'Temukan destinasi tersembunyi dan pengalaman tak terlupakan di ibu kota Indonesia.',
+        title: 'Yuk,',
+        highlight: 'Gaskeun',
+        description: 'Siapin sneakers lo, charge HP full, dan mulai eksplor Jakarta versi lo sendiri.',
         showCTA: true,
     },
 ];
@@ -193,31 +193,30 @@ const HeroSection = () => {
 
 
                 // === TEXT SLIDES ===
-                // Timeline: each slide owns a portion of the scroll
-                // 0.00 - 0.08: empty (just video starts)
-                // 0.08 - 0.30: slide 0
-                // 0.30 - 0.52: slide 1
-                // 0.52 - 0.74: slide 2
-                // 0.74 - 0.96: slide 3
-                // 0.96 - 1.00: fade out everything
+                // Unclamped progress (goes beyond 1.0 into bridge area)
+                const rawProgress = -rect.top / scrollableHeight;
 
                 const slideCount = textSlides.length;
-                const startOffset = 0.08;  // When first text starts
-                const endOffset = 0.96;    // When last text ends
+                const startOffset = 0.08;
+                const endOffset = 0.96;
                 const totalRange = endOffset - startOffset;
                 const slideRange = totalRange / slideCount;
+
+                // Bridge fade: 300px after hero ends, last slide fades out
+                const bridgeAsFraction = 300 / scrollableHeight;
 
                 slideRefs.current.forEach((slideEl, i) => {
                     if (!slideEl) return;
 
                     const slideStart = startOffset + i * slideRange;
                     const slideEnd = slideStart + slideRange;
-                    const fadeDuration = slideRange * 0.3; // 30% of slide range for fade
+                    const fadeDuration = slideRange * 0.3;
+                    const isLastSlide = i === slideCount - 1;
 
                     let opacity = 0;
                     let translateY = 30;
 
-                    if (scrollProgress >= slideStart && scrollProgress <= slideEnd) {
+                    if (scrollProgress >= slideStart && (isLastSlide || scrollProgress <= slideEnd)) {
                         // Fade in phase
                         if (scrollProgress < slideStart + fadeDuration) {
                             const fadeProgress = (scrollProgress - slideStart) / fadeDuration;
@@ -225,16 +224,23 @@ const HeroSection = () => {
                             translateY = 30 * (1 - fadeProgress);
                         }
                         // Visible phase
-                        else if (scrollProgress < slideEnd - fadeDuration) {
+                        else if (isLastSlide || scrollProgress < slideEnd - fadeDuration) {
                             opacity = 1;
                             translateY = 0;
                         }
-                        // Fade out phase
+                        // Fade out phase (not for last slide)
                         else {
                             const fadeProgress = (slideEnd - scrollProgress) / fadeDuration;
                             opacity = fadeProgress;
                             translateY = -20 * (1 - fadeProgress);
                         }
+                    }
+
+                    // Last slide: gradual fade during bridge gradient
+                    if (isLastSlide && rawProgress > 1.0) {
+                        const bridgeFade = Math.max(1 - (rawProgress - 1.0) / bridgeAsFraction, 0);
+                        opacity = bridgeFade;
+                        translateY = -20 * (1 - bridgeFade);
                     }
 
                     slideEl.style.opacity = `${opacity}`;

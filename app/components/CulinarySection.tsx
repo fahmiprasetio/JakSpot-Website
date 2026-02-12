@@ -14,51 +14,51 @@ interface CulinaryItem {
 const culinaryItems: CulinaryItem[] = [
     {
         id: 1,
-        name: 'Kerak Telor',
-        origin: 'Betawi',
+        name: 'Martabak Boss',
+        origin: 'Menteng',
         image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 15.000',
-        description: 'Makanan khas Betawi dengan telur dan ebi'
+        price: 'Rp 45.000',
+        description: 'Martabak manis overload yang bikin lo gak mau share'
     },
     {
         id: 2,
-        name: 'Soto Betawi',
-        origin: 'Betawi',
+        name: 'Ramen Nagi',
+        origin: 'Grand Indo',
         image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 35.000',
-        description: 'Sup daging sapi dengan kuah santan yang gurih'
+        price: 'Rp 85.000',
+        description: 'Kuahnya rich banget, antri panjang tapi worth it'
     },
     {
         id: 3,
-        name: 'Nasi Uduk',
-        origin: 'Betawi',
-        image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 20.000',
-        description: 'Nasi gurih dengan lauk pelengkap khas'
+        name: 'Kopi Kenangan',
+        origin: 'Everywhere',
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80',
+        price: 'Rp 18.000',
+        description: 'Es kopi susu yang jadi daily fuel anak Jakarta'
     },
     {
         id: 4,
-        name: 'Bir Pletok',
-        origin: 'Betawi',
+        name: 'Sei Sapiku',
+        origin: 'Sunter',
         image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 10.000',
-        description: 'Minuman tradisional hangat dengan rempah'
+        price: 'Rp 55.000',
+        description: 'Daging asap NTT yang hype-nya gak pernah turun'
     },
     {
         id: 5,
-        name: 'Roti Buaya',
-        origin: 'Betawi',
-        image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 150.000',
-        description: 'Roti tradisional untuk acara pernikahan'
+        name: 'Taco Local',
+        origin: 'Kemang',
+        image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=600&q=80',
+        price: 'Rp 35.000',
+        description: 'Mexican food di gang kecil, rasanya beneran authentic'
     },
     {
         id: 6,
-        name: 'Gado-Gado',
+        name: 'Bakmi GM',
         origin: 'Jakarta',
-        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 25.000',
-        description: 'Sayur segar dengan bumbu kacang spesial'
+        image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80',
+        price: 'Rp 42.000',
+        description: 'Comfort food legendaris yang gak ada matinya'
     }
 ];
 

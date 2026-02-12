@@ -13,52 +13,52 @@ interface Destination {
 const destinations: Destination[] = [
     {
         id: 1,
-        name: 'Monas',
-        category: 'Monumen',
-        image: 'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=800&q=80',
-        description: 'Belum ke Jakarta kalau belum foto di sini'
+        name: 'The Platform',
+        category: 'Skyline',
+        image: 'https://images.unsplash.com/photo-1572569878864-1506b4d37d2f?auto=format&fit=crop&w=800&q=80',
+        description: 'View Bundaran HI dari atas gak pernah gagal bikin lo terpukau'
     },
     {
         id: 2,
-        name: 'Kota Tua',
-        category: 'Sejarah',
-        image: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=80',
-        description: 'Jalan-jalan sambil belajar sejarah, vibes-nya beda'
+        name: 'Tanatap Ampera',
+        category: 'Arsitektur',
+        image: 'https://images.unsplash.com/photo-1621683935816-724f746dc16f?auto=format&fit=crop&w=800&q=80',
+        description: 'Ngopi di sini berasa lagi di galeri seni, desainnya mind-blowing banget'
     },
     {
         id: 3,
-        name: 'Ancol',
-        category: 'Hiburan',
-        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-        description: 'Weekend seru bareng teman atau keluarga'
+        name: 'Urban Forest',
+        category: 'Chill',
+        image: 'https://images.unsplash.com/photo-1596280629532-34069818b76a?auto=format&fit=crop&w=800&q=80',
+        description: 'Escape sebentar dari macetnya Cipete, hirup udara seger di sini'
     },
     {
         id: 4,
-        name: 'SCBD',
-        category: 'Modern',
-        image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800&q=80',
-        description: 'Nongkrong kekinian sambil nikmatin skyline Jakarta'
+        name: 'Sarang Semut',
+        category: 'Arts',
+        image: 'https://images.unsplash.com/photo-1510673322123-6449ee422b40?auto=format&fit=crop&w=800&q=80',
+        description: 'Vibes gua aesthetic di Blok M yang teksturnya unik parah'
     },
     {
         id: 5,
-        name: 'Taman Mini',
-        category: 'Budaya',
-        image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=800&q=80',
-        description: 'Keliling Indonesia dalam satu hari? Bisa banget'
+        name: 'Costess Cafe',
+        category: 'Skyline',
+        image: 'https://images.unsplash.com/photo-1481437156560-3205f6a55735?auto=format&fit=crop&w=800&q=80',
+        description: 'Nongkrong cantik ditemenin gedung-gedung kaca Kuningan'
     },
     {
         id: 6,
-        name: 'Pulau Seribu',
-        category: 'Alam',
-        image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&w=800&q=80',
-        description: 'Kabur sebentar dari hiruk pikuk kota'
+        name: 'Row 9',
+        category: 'Chill',
+        image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80',
+        description: 'Spot outdoor di Blok M yang lagi hits banget buat nyantai sore'
     }
 ];
 
 const DestinationsSection = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [activeFilter, setActiveFilter] = useState('Semua');
-    const filters = ['Semua', 'Monumen', 'Sejarah', 'Hiburan', 'Modern', 'Budaya', 'Alam'];
+    const filters = ['Semua', 'Skyline', 'Arsitektur', 'Chill', 'Arts'];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -128,15 +128,15 @@ const DestinationsSection = () => {
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em'
                     }}>
-                        Mau ke Mana Dulu?
+                        Bukan yang Itu-Itu Aja
                     </span>
                     <h2 className="section-title" style={{ marginTop: '16px' }}>
-                        Spot Favorit yang<br />
-                        <span className="gradient-text">Sayang Dilewatkan</span>
+                        Spot yang Jarang<br />
+                        <span className="gradient-text">Orang Tau</span>
                     </h2>
                     <p className="section-subtitle" style={{ margin: '0 auto' }}>
-                        Dari yang klasik sampai yang hits, ini tempat-tempat
-                        yang bikin kamu pengen balik lagi ke Jakarta.
+                        Lo gak perlu jauh-jauh ke Bali buat nemu tempat keren.
+                        Jakarta punya hidden gems yang lo pasti belum eksplor.
                     </p>
                 </div>
 
