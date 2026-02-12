@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 const TOTAL_FRAMES = 240;
+const START_FRAME = 70;
 const IMAGE_PATH = '/image-sequences-hero-section/ezgif-frame-';
 
 const getFrameSrc = (index: number): string => {
@@ -47,7 +48,6 @@ const HeroSection = () => {
 
     // Refs for each text slide
     const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
-    const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
     // Preload all images
     useEffect(() => {
@@ -140,7 +140,7 @@ const HeroSection = () => {
     // Draw first frame when loaded
     useEffect(() => {
         if (isLoaded) {
-            drawFrame(0);
+            drawFrame(START_FRAME - 1);
         }
     }, [isLoaded, drawFrame]);
 
@@ -161,20 +161,27 @@ const HeroSection = () => {
                 const rect = section.getBoundingClientRect();
                 const scrollableHeight = section.offsetHeight - window.innerHeight;
 
-                // Hide when past hero
-                if (rect.bottom <= 0) {
+                // Hide canvas only after bridge gradient has fully covered it
+                // Bridge is 300px tall, so canvas stays visible 300px beyond hero section
+                if (rect.bottom <= -300) {
                     fixedContainer.style.visibility = 'hidden';
                     return;
                 } else {
                     fixedContainer.style.visibility = 'visible';
                 }
 
-                // scrollProgress: 0 → 1
+                // scrollProgress for TEXT: 0 → 1 (finishes when overlap starts)
                 const scrollProgress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
 
-                // === FRAME ANIMATION ===
+                // frameProgress for CANVAS: uses full section height + bridge (300px)
+                // Frames keep playing THROUGH the overlap period when section 2 covers the canvas
+                const totalFrameDistance = section.offsetHeight + 300;
+                const frameProgress = Math.min(Math.max(-rect.top / totalFrameDistance, 0), 1);
+
+                // === FRAME ANIMATION === (frames 70-240)
+                const usableFrames = TOTAL_FRAMES - START_FRAME;
                 const frameIndex = Math.min(
-                    Math.floor(scrollProgress * (TOTAL_FRAMES - 1)),
+                    START_FRAME - 1 + Math.floor(frameProgress * usableFrames),
                     TOTAL_FRAMES - 1
                 );
 
@@ -183,18 +190,7 @@ const HeroSection = () => {
                     drawFrame(frameIndex);
                 }
 
-                // === SCROLL INDICATOR ===
-                // Fade out scroll indicator quickly
-                if (scrollIndicatorRef.current) {
-                    const indicatorOpacity = Math.max(1 - scrollProgress * 8, 0);
-                    scrollIndicatorRef.current.style.opacity = `${indicatorOpacity}`;
-                }
 
-                // === PROGRESS BAR ===
-                const progressBar = fixedContainer.querySelector('.hero-progress-bar') as HTMLElement;
-                if (progressBar) {
-                    progressBar.style.height = `${scrollProgress * 100}%`;
-                }
 
                 // === TEXT SLIDES ===
                 // Timeline: each slide owns a portion of the scroll
@@ -436,42 +432,9 @@ const HeroSection = () => {
                     </div>
                 ))}
 
-                {/* Scroll progress bar */}
-                <div style={{
-                    position: 'absolute',
-                    right: '30px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    width: '3px',
-                    height: '120px',
-                    background: 'rgba(255,255,255,0.1)',
-                    borderRadius: '2px',
-                    zIndex: 10,
-                    overflow: 'hidden',
-                }}>
-                    <div
-                        className="hero-progress-bar"
-                        style={{
-                            width: '100%',
-                            height: '0%',
-                            background: 'var(--gradient-1)',
-                            borderRadius: '2px',
-                            transition: 'height 0.1s linear',
-                        }}
-                    />
-                </div>
 
-                {/* Scroll indicator - visible at start */}
-                <div
-                    ref={scrollIndicatorRef}
-                    className="scroll-indicator"
-                    style={{ zIndex: 10, pointerEvents: 'auto' }}
-                >
-                    <div className="mouse">
-                        <div className="wheel" />
-                    </div>
-                    <span>Scroll</span>
-                </div>
+
+
 
                 {/* Loading overlay */}
                 {!isLoaded && (

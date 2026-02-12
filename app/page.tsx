@@ -83,6 +83,14 @@ export default function Home() {
           <Navbar />
           <main>
             <HeroSection />
+            {/* Bridge gradient: smooth transition from hero canvas to dark section */}
+            <div style={{
+              position: 'relative',
+              zIndex: 2,
+              height: '300px',
+              background: 'linear-gradient(180deg, transparent 0%, var(--dark-surface) 100%)',
+              pointerEvents: 'none',
+            }} />
             <DestinationsSection />
             <CulinarySection />
             <CultureSection />

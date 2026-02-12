@@ -457,7 +457,8 @@ body {
   opacity: 1;
 }
 
-.scroll-indicator .mouse {
+.scroll-indicator .mouse,
+.mouse {
   width: 24px;
   height: 40px;
   border: 2px solid var(--foreground);
@@ -465,7 +466,8 @@ body {
   position: relative;
 }
 
-.scroll-indicator .wheel {
+.scroll-indicator .wheel,
+.wheel {
   width: 4px;
   height: 8px;
   background: var(--primary);
@@ -493,6 +495,39 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* Mouse Button Scroll Indicator */
+.mouse-btn {
+  display: flex;
+  width: 24px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.mouse-scroll {
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(170deg, rgba(255, 107, 53, 1), rgba(255, 154, 60, 1));
+  border-radius: 50%;
+  margin: auto;
+  box-shadow: 0 0 6px rgba(255, 107, 53, 0.6);
+  animation: scrolling13 1.5s ease-in-out infinite;
+}
+
+@keyframes scrolling13 {
+  0% {
+    opacity: 0.3;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(10px);
+  }
 }
 
 /* Decorative Elements */

@@ -1,18 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const heroLogoRef = useRef<HTMLDivElement>(null);
+  const navLogoRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorGroupRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Scroll threshold: how quickly the logo transitions (in px)
+  const SCROLL_THRESHOLD = 300;
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -24,6 +22,65 @@ const Navbar = () => {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
+  const handleScroll = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
+    rafRef.current = requestAnimationFrame(() => {
+      const y = window.scrollY;
+      const progress = Math.min(y / SCROLL_THRESHOLD, 1);
+
+      // === HERO LOGO (centered, large) ===
+      if (heroLogoRef.current) {
+        const opacity = Math.max(1 - progress * 2.5, 0); // fades out faster
+        const scale = 1 - progress * 0.6; // 1 → 0.4
+        const moveUp = progress * 120;
+        heroLogoRef.current.style.opacity = `${opacity}`;
+        heroLogoRef.current.style.transform = `translate(-50%, -50%) scale(${scale}) translateY(-${moveUp}px)`;
+        heroLogoRef.current.style.pointerEvents = opacity > 0.1 ? 'auto' : 'none';
+      }
+
+      // === SCROLL INDICATOR ===
+      if (scrollIndicatorGroupRef.current) {
+        const indicatorOpacity = Math.max(1 - progress * 4, 0);
+        scrollIndicatorGroupRef.current.style.opacity = `${indicatorOpacity}`;
+      }
+
+      // === NAVBAR LOGO (small, top-left) ===
+      if (navLogoRef.current) {
+        const navOpacity = Math.min(progress * 2.5, 1); // fades in
+        navLogoRef.current.style.opacity = `${navOpacity}`;
+      }
+
+      // === NAVBAR BACKGROUND ===
+      const navbar = document.querySelector('.jk-navbar') as HTMLElement;
+      const navWrapper = document.querySelector('.jk-nav-wrapper') as HTMLElement;
+      if (navbar && navWrapper) {
+        const scrolled = y > 50;
+        // Nav wrapper
+        navWrapper.style.padding = scrolled ? '12px 20px' : '0';
+
+        // Nav bar
+        navbar.style.maxWidth = scrolled ? '700px' : '100%';
+        navbar.style.padding = scrolled ? '12px 24px' : '20px 40px';
+        navbar.style.background = scrolled ? 'rgba(15, 15, 20, 0.6)' : 'transparent';
+        navbar.style.backdropFilter = scrolled ? 'blur(20px) saturate(1.5)' : 'none';
+        (navbar.style as any).WebkitBackdropFilter = scrolled ? 'blur(20px) saturate(1.5)' : 'none';
+        navbar.style.borderRadius = scrolled ? '50px' : '0';
+        navbar.style.border = scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent';
+        navbar.style.boxShadow = scrolled ? '0 8px 32px rgba(0, 0, 0, 0.3)' : 'none';
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // initial call
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [handleScroll]);
+
   const navLinks = [
     { name: 'Beranda', href: '#hero' },
     { name: 'Destinasi', href: '#destinations' },
@@ -34,58 +91,145 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Navbar Wrapper - controls positioning */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        display: 'flex',
-        justifyContent: 'center',
-        padding: scrolled ? '12px 20px' : '0',
-        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}>
-        {/* Navbar Bar */}
-        <nav style={{
+      {/* === HERO LOGO — Centered, Large, visible at top === */}
+      <div
+        ref={heroLogoRef}
+        style={{
+          position: 'fixed',
+          top: '48%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1002,
           display: 'flex',
-          justifyContent: 'space-between',
+          flexDirection: 'column',
           alignItems: 'center',
-          width: '100%',
-          maxWidth: scrolled ? '700px' : '100%',
-          padding: scrolled ? '12px 24px' : '20px 40px',
-          background: scrolled ? 'rgba(15, 15, 20, 0.6)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-          borderRadius: scrolled ? '50px' : '0',
-          border: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 8px 32px rgba(0, 0, 0, 0.3)' : 'none',
-          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          gap: '24px',
+          willChange: 'transform, opacity',
+          pointerEvents: 'auto',
+        }}
+      >
+        {/* Big Logo Icon */}
+        <div style={{
+          width: '90px',
+          height: '90px',
+          background: 'var(--gradient-1)',
+          borderRadius: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: '800',
+          fontSize: '2.8rem',
+          color: 'white',
+          boxShadow: '0 12px 40px rgba(255, 107, 53, 0.35)',
         }}>
-          {/* Logo */}
+          J
+        </div>
+
+        {/* Big Logo Text */}
+        <span style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: '3rem',
+          fontWeight: '700',
+          color: 'var(--foreground)',
+          letterSpacing: '-0.02em',
+        }}>
+          Jak<span className="gradient-text">Spot</span>
+        </span>
+
+
+      </div>
+
+      {/* === SCROLL INDICATOR — Below hero logo === */}
+      <div
+        ref={scrollIndicatorGroupRef}
+        style={{
+          position: 'fixed',
+          bottom: '40px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1002,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '6px',
+          willChange: 'opacity',
+        }}
+      >
+        <span className="mouse-btn">
+          <span className="mouse-scroll"></span>
+        </span>
+        <span style={{
+          fontSize: '0.75rem',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color: 'var(--foreground)',
+          opacity: 0.7,
+        }}>
+          Scroll untuk menjelajahi
+        </span>
+      </div>
+
+      {/* === NAVBAR — Top bar with small logo appearing on scroll === */}
+      <div
+        className="jk-nav-wrapper"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '0',
+          transition: 'padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        <nav
+          className="jk-navbar"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '100%',
+            padding: '20px 40px',
+            background: 'transparent',
+            borderRadius: '0',
+            border: '1px solid transparent',
+            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          {/* Navbar Logo — fades in on scroll */}
           <a href="#hero" style={{ textDecoration: 'none', zIndex: 1001 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div
+              ref={navLogoRef}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                opacity: 0,
+                transition: 'none',
+              }}
+            >
               <div style={{
-                width: scrolled ? '32px' : '38px',
-                height: scrolled ? '32px' : '38px',
+                width: '32px',
+                height: '32px',
                 background: 'var(--gradient-1)',
                 borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: '800',
-                fontSize: scrolled ? '0.95rem' : '1.1rem',
+                fontSize: '0.95rem',
                 color: 'white',
-                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
               }}>
                 J
               </div>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: scrolled ? '1.15rem' : '1.4rem',
+                fontSize: '1.15rem',
                 fontWeight: '700',
                 color: 'var(--foreground)',
-                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
               }}>
                 Jak<span className="gradient-text">Spot</span>
               </span>
@@ -110,7 +254,7 @@ const Navbar = () => {
             }}
           >
             <div style={{
-              width: scrolled ? '22px' : '26px',
+              width: '24px',
               height: '2px',
               background: 'var(--foreground)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -118,7 +262,7 @@ const Navbar = () => {
               borderRadius: '2px',
             }} />
             <div style={{
-              width: scrolled ? '14px' : '18px',
+              width: '16px',
               height: '2px',
               background: 'var(--foreground)',
               marginTop: '7px',
@@ -128,7 +272,7 @@ const Navbar = () => {
               borderRadius: '2px',
             }} />
             <div style={{
-              width: scrolled ? '18px' : '22px',
+              width: '20px',
               height: '2px',
               background: 'var(--foreground)',
               marginTop: '7px',

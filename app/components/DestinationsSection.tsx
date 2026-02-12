@@ -16,42 +16,42 @@ const destinations: Destination[] = [
         name: 'Monas',
         category: 'Monumen',
         image: 'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=800&q=80',
-        description: 'Simbol kemerdekaan Indonesia yang megah'
+        description: 'Belum ke Jakarta kalau belum foto di sini'
     },
     {
         id: 2,
         name: 'Kota Tua',
         category: 'Sejarah',
         image: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=80',
-        description: 'Kawasan bersejarah peninggalan Belanda'
+        description: 'Jalan-jalan sambil belajar sejarah, vibes-nya beda'
     },
     {
         id: 3,
         name: 'Ancol',
         category: 'Hiburan',
         image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-        description: 'Pantai dan taman hiburan terbesar di Jakarta'
+        description: 'Weekend seru bareng teman atau keluarga'
     },
     {
         id: 4,
         name: 'SCBD',
         category: 'Modern',
         image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800&q=80',
-        description: 'Pusat bisnis dan gaya hidup modern Jakarta'
+        description: 'Nongkrong kekinian sambil nikmatin skyline Jakarta'
     },
     {
         id: 5,
         name: 'Taman Mini',
         category: 'Budaya',
         image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=800&q=80',
-        description: 'Indonesia dalam satu taman'
+        description: 'Keliling Indonesia dalam satu hari? Bisa banget'
     },
     {
         id: 6,
         name: 'Pulau Seribu',
         category: 'Alam',
         image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&w=800&q=80',
-        description: 'Surga tropis di utara Jakarta'
+        description: 'Kabur sebentar dari hiruk pikuk kota'
     }
 ];
 
@@ -106,10 +106,11 @@ const DestinationsSection = () => {
             position: 'relative',
             overflow: 'hidden'
         }}>
+
             {/* Background Decoration */}
             <div style={{
                 position: 'absolute',
-                top: '-200px',
+                top: '100px',
                 right: '-200px',
                 width: '600px',
                 height: '600px',
@@ -127,15 +128,15 @@ const DestinationsSection = () => {
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em'
                     }}>
-                        Destinasi Populer
+                        Mau ke Mana Dulu?
                     </span>
                     <h2 className="section-title" style={{ marginTop: '16px' }}>
-                        Tempat yang Wajib<br />
-                        <span className="gradient-text">Dikunjungi</span>
+                        Spot Favorit yang<br />
+                        <span className="gradient-text">Sayang Dilewatkan</span>
                     </h2>
                     <p className="section-subtitle" style={{ margin: '0 auto' }}>
-                        Jelajahi destinasi ikonik Jakarta, dari monumen bersejarah hingga
-                        tempat hiburan modern yang tak terlupakan.
+                        Dari yang klasik sampai yang hits, ini tempat-tempat
+                        yang bikin kamu pengen balik lagi ke Jakarta.
                     </p>
                 </div>
 
