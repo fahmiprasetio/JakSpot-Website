@@ -99,12 +99,14 @@ const Navbar = () => {
             style={{
               background: 'transparent',
               border: 'none',
+              outline: 'none',
               cursor: 'pointer',
               padding: '8px',
               zIndex: 1001,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-end',
+              WebkitAppearance: 'none',
             }}
           >
             <div style={{

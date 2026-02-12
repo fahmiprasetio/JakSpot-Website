@@ -30,6 +30,20 @@
   box-sizing: border-box;
 }
 
+button {
+  outline: none;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -164,6 +178,7 @@ body {
 /* Section Styles */
 .section {
   position: relative;
+  z-index: 2;
   min-height: 100vh;
   padding: 120px 5%;
 }

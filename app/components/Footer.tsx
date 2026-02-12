@@ -50,6 +50,7 @@ const Footer = () => {
         <footer id="contact" ref={footerRef} style={{
             background: 'var(--dark-surface)',
             position: 'relative',
+            zIndex: 2,
             overflow: 'hidden'
         }}>
             {/* Decorative Top Border */}
