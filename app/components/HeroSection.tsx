@@ -36,7 +36,12 @@ const textSlides = [
     },
 ];
 
-const HeroSection = () => {
+interface HeroSectionProps {
+    onLoadProgress?: (progress: number) => void;
+    onLoadComplete?: () => void;
+}
+
+const HeroSection = ({ onLoadProgress, onLoadComplete }: HeroSectionProps) => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const fixedContainerRef = useRef<HTMLDivElement>(null);
@@ -49,6 +54,12 @@ const HeroSection = () => {
     // Refs for each text slide
     const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+    // Keep stable refs for callbacks to avoid stale closures
+    const onLoadProgressRef = useRef(onLoadProgress);
+    const onLoadCompleteRef = useRef(onLoadComplete);
+    onLoadProgressRef.current = onLoadProgress;
+    onLoadCompleteRef.current = onLoadComplete;
+
     // Preload all images
     useEffect(() => {
         let loadedCount = 0;
@@ -59,15 +70,21 @@ const HeroSection = () => {
             img.src = getFrameSrc(i);
             img.onload = () => {
                 loadedCount++;
-                setLoadProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
+                const progress = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+                setLoadProgress(progress);
+                onLoadProgressRef.current?.(progress);
                 if (loadedCount === TOTAL_FRAMES) {
                     setIsLoaded(true);
+                    onLoadCompleteRef.current?.();
                 }
             };
             img.onerror = () => {
                 loadedCount++;
+                const progress = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+                onLoadProgressRef.current?.(progress);
                 if (loadedCount === TOTAL_FRAMES) {
                     setIsLoaded(true);
+                    onLoadCompleteRef.current?.();
                 }
             };
             images[i - 1] = img;
@@ -442,54 +459,7 @@ const HeroSection = () => {
 
 
 
-                {/* Loading overlay */}
-                {!isLoaded && (
-                    <div
-                        style={{
-                            position: 'absolute',
-                            inset: 0,
-                            background: 'var(--background)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 50,
-                            pointerEvents: 'auto',
-                        }}
-                    >
-                        <div style={{
-                            fontFamily: 'var(--font-display)',
-                            fontSize: '1.2rem',
-                            color: 'var(--text-muted)',
-                            marginBottom: '20px',
-                        }}>
-                            Memuat visual...
-                        </div>
-                        <div style={{
-                            width: '200px',
-                            height: '4px',
-                            background: 'var(--dark-surface-2)',
-                            borderRadius: '2px',
-                            overflow: 'hidden',
-                        }}>
-                            <div style={{
-                                width: `${loadProgress}%`,
-                                height: '100%',
-                                background: 'var(--gradient-1)',
-                                borderRadius: '2px',
-                                transition: 'width 0.15s ease',
-                            }} />
-                        </div>
-                        <div style={{
-                            marginTop: '10px',
-                            fontSize: '0.85rem',
-                            color: 'var(--text-muted)',
-                            opacity: 0.6,
-                        }}>
-                            {loadProgress}%
-                        </div>
-                    </div>
-                )}
+                {/* Loading overlay removed - handled by parent LoadingScreen */}
             </div>
         </>
     );

@@ -1,27 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import DestinationsSection from './components/DestinationsSection';
 import CulinarySection from './components/CulinarySection';
 import CultureSection from './components/CultureSection';
 import Footer from './components/Footer';
+import LoadingScreen from './components/LoadingScreen';
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [isHeroReady, setIsHeroReady] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
-  useEffect(() => {
-    // Simulate loading time for smooth entrance
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+  // Called by HeroSection when image progress updates
+  const handleLoadProgress = useCallback((progress: number) => {
+    setLoadProgress(progress);
+  }, []);
 
-    return () => clearTimeout(timer);
+  // Called by HeroSection when all images are loaded
+  const handleLoadComplete = useCallback(() => {
+    setIsHeroReady(true);
+  }, []);
+
+  // Called by LoadingScreen when exit animation finishes
+  const handleExitComplete = useCallback(() => {
+    setShowContent(true);
   }, []);
 
   useEffect(() => {
     // Smooth reveal animation on scroll
+    if (!showContent) return;
+
     const revealElements = document.querySelectorAll('.reveal');
 
     const observer = new IntersectionObserver(
@@ -38,74 +49,81 @@ export default function Home() {
     revealElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [isLoading]);
+  }, [showContent]);
+
+  // Prevent scroll while loading & reset to top when content is shown
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (!showContent) {
+      // Lock scroll completely
+      html.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
+      html.style.position = 'fixed';
+      html.style.width = '100%';
+      html.style.top = '0';
+      window.scrollTo(0, 0);
+    } else {
+      // Unlock scroll & ensure we start at top
+      html.style.overflow = '';
+      body.style.overflow = '';
+      html.style.position = '';
+      html.style.width = '';
+      html.style.top = '';
+      window.scrollTo(0, 0);
+    }
+    return () => {
+      html.style.overflow = '';
+      body.style.overflow = '';
+      html.style.position = '';
+      html.style.width = '';
+      html.style.top = '';
+    };
+  }, [showContent]);
 
   return (
     <>
-      {/* Loading Screen */}
-      <div className={`loader ${!isLoading ? 'hidden' : ''}`}>
-        <div className="loader-content">
-          <div className="loader-logo">
-            <span style={{ color: 'var(--foreground)' }}>Jak</span>
-            <span className="gradient-text">Spot</span>
-          </div>
-          <p style={{
-            color: 'var(--text-muted)',
-            marginTop: '16px',
-            fontSize: '0.9rem'
-          }}>
-            Memuat pengalaman Jakarta...
-          </p>
-
-          {/* Loading Bar */}
-          <div style={{
-            width: '200px',
-            height: '4px',
-            background: 'var(--dark-surface-2)',
-            borderRadius: '2px',
-            marginTop: '24px',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              width: '100%',
-              height: '100%',
-              background: 'var(--gradient-1)',
-              borderRadius: '2px',
-              animation: 'loadingBar 2s ease-in-out'
-            }} />
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      {!isLoading && (
-        <div style={{ opacity: 1, transition: 'opacity 0.5s ease' }}>
-          <Navbar />
-          <main>
-            <HeroSection />
-            {/* Bridge gradient: smooth transition from hero canvas to dark section */}
-            <div style={{
-              position: 'relative',
-              zIndex: 2,
-              height: '300px',
-              background: 'linear-gradient(180deg, transparent 0%, var(--dark-surface) 100%)',
-              pointerEvents: 'none',
-            }} />
-            <DestinationsSection />
-            <CulinarySection />
-            <CultureSection />
-          </main>
-          <Footer />
-        </div>
+      {/* Loading Screen - shows until hero images are loaded */}
+      {!showContent && (
+        <LoadingScreen
+          progress={loadProgress}
+          isReady={isHeroReady}
+          onExitComplete={handleExitComplete}
+        />
       )}
+
+      {/* Main Content - always mounted so images load immediately */}
+      <div
+        style={{
+          opacity: showContent ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          visibility: showContent ? 'visible' : 'hidden',
+        }}
+      >
+        <Navbar />
+        <main>
+          <HeroSection
+            onLoadProgress={handleLoadProgress}
+            onLoadComplete={handleLoadComplete}
+          />
+          {/* Bridge gradient: smooth transition from hero canvas to dark section */}
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            height: '300px',
+            background: 'linear-gradient(180deg, transparent 0%, var(--dark-surface) 100%)',
+            pointerEvents: 'none',
+          }} />
+          <DestinationsSection />
+          <CulinarySection />
+          <CultureSection />
+        </main>
+        <Footer />
+      </div>
 
       {/* Global Styles */}
       <style jsx global>{`
-        @keyframes loadingBar {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(0); }
-        }
-
         /* Smooth scroll for anchor links */
         html {
           scroll-behavior: smooth;
