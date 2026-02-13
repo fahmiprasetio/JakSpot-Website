@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import DestinationsSection from './components/DestinationsSection';
-import CulinarySection from './components/CulinarySection';
+import EventSection from './components/EventSection';
 import CultureSection from './components/CultureSection';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
@@ -116,7 +116,7 @@ export default function Home() {
             pointerEvents: 'none',
           }} />
           <DestinationsSection />
-          <CulinarySection />
+          <EventSection />
           <CultureSection />
         </main>
         <Footer />
