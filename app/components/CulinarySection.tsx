@@ -14,51 +14,171 @@ interface CulinaryItem {
 const culinaryItems: CulinaryItem[] = [
     {
         id: 1,
-        name: 'Martabak Boss',
-        origin: 'Menteng',
-        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 45.000',
-        description: 'Martabak manis overload yang bikin lo gak mau share'
+        name: 'Waroeng Roekoen',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/waroeng roekoen.jpg',
+        price: 'Rp 50k - 150k',
+        description: 'Suasana nyaman dengan sajian kuliner yang menggugah selera.'
     },
     {
         id: 2,
-        name: 'Ramen Nagi',
-        origin: 'Grand Indo',
-        image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 85.000',
-        description: 'Kuahnya rich banget, antri panjang tapi worth it'
+        name: 'The Cafe Hotel Mulia',
+        origin: 'Senayan',
+        image: '/Destination/Cafe, Bar, and Eatery/The Cafe Hotel Mulia.jpg',
+        price: 'Rp 500k++',
+        description: 'Experience dining mewah dengan pilihan menu internasional terbaik.'
     },
     {
         id: 3,
-        name: 'Kopi Kenangan',
-        origin: 'Everywhere',
-        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 18.000',
-        description: 'Es kopi susu yang jadi daily fuel anak Jakarta'
+        name: 'The Platform Bar',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/The Platform Jakarta.webp',
+        price: 'Rp 100k - 300k',
+        description: 'Bar dengan pemandangan kota Jakarta yang menakjubkan.'
     },
     {
         id: 4,
-        name: 'Sei Sapiku',
-        origin: 'Sunter',
-        image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 55.000',
-        description: 'Daging asap NTT yang hype-nya gak pernah turun'
+        name: 'St. Regis Bar',
+        origin: 'Kuningan',
+        image: '/Destination/Cafe, Bar, and Eatery/St Regis Jakarta Bar.jpg',
+        price: 'Rp 200k++',
+        description: 'Jazz bar elegan dengan koleksi cocktail premium.'
     },
     {
         id: 5,
-        name: 'Taco Local',
-        origin: 'Kemang',
-        image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 35.000',
-        description: 'Mexican food di gang kecil, rasanya beneran authentic'
+        name: 'Sarang Semut',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg',
+        price: 'Rp 50k - 100k',
+        description: 'Tempat nongkrong unik dengan desain artistik.'
     },
     {
         id: 6,
-        name: 'Bakmi GM',
+        name: 'Costess Bar',
+        origin: 'Kuningan',
+        image: '/Destination/Cafe, Bar, and Eatery/Costess Cafe Jakarta.jpg',
+        price: 'Rp 150k - 300k',
+        description: 'Rooftop bar dengan view 360 derajat kota Jakarta.'
+    },
+    {
+        id: 7,
+        name: 'Row 9 Cafe',
+        origin: 'Blok M',
+        image: '/Destination/Cafe, Bar, and Eatery/row9.jpg',
+        price: 'Rp 50k - 150k',
+        description: 'Cafe hits di Blok M dengan suasana yang cozy.'
+    },
+    {
+        id: 8,
+        name: 'Masagi Coffee',
+        origin: 'BSD / Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/Masagi Coffee.webp',
+        price: 'Rp 30k - 70k',
+        description: 'Kopi berkualitas dengan suasana taman yang asri.'
+    },
+    {
+        id: 9,
+        name: 'Tugo Coffee',
         origin: 'Jakarta',
-        image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80',
-        price: 'Rp 42.000',
-        description: 'Comfort food legendaris yang gak ada matinya'
+        image: '/Destination/Cafe, Bar, and Eatery/Tugo Coffee.jpg',
+        price: 'Rp 30k - 80k',
+        description: 'Spot ngopi favorit dengan biji kopi pilihan.'
+    },
+    {
+        id: 10,
+        name: 'Kurasu Kissaten',
+        origin: 'Senopati',
+        image: '/Destination/Cafe, Bar, and Eatery/Kurasu.jpg',
+        price: 'Rp 50k - 100k',
+        description: 'Cabang coffee shop populer dari Kyoto.'
+    },
+    {
+        id: 11,
+        name: 'HOMS Jakarta',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/HOMS.jpg',
+        price: 'Rp 50k - 150k',
+        description: 'Homey vibes cafe yang cocok untuk work from cafe.'
+    },
+    {
+        id: 12,
+        name: 'Salty Salty PIK',
+        origin: 'PIK',
+        image: '/Destination/Cafe, Bar, and Eatery/Salty Salty.jpg',
+        price: 'Rp 50k - 150k',
+        description: 'Cafe estetik di PIK dengan menu brunch andalan.'
+    },
+    {
+        id: 13,
+        name: "Billy's Block",
+        origin: 'Jakarta',
+        image: "/Destination/Cafe, Bar, and Eatery/Billy's Block.jpeg",
+        price: 'Rp 50k - 150k',
+        description: 'Tempat hangout seru dengan musik dan vibes yang asik.'
+    },
+    {
+        id: 14,
+        name: 'RM. Fariz',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/RM Fariz.jpeg',
+        price: 'Rp 30k - 80k',
+        description: 'Rumah makan legendaris dengan cita rasa nusantara.'
+    },
+    {
+        id: 15,
+        name: 'Toko Kopi Maru',
+        origin: 'Fatmawati',
+        image: '/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg',
+        price: 'Rp 30k - 70k',
+        description: 'Kopi susu gula aren yang creamy dan nagih.'
+    },
+    {
+        id: 16,
+        name: 'Dudung Maman Kopi',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/Dudung Maman Kopi.jpg',
+        price: 'Rp 20k - 50k',
+        description: 'Warung kopi sederhana dengan rasa istimewa.'
+    },
+    {
+        id: 17,
+        name: 'Kopi Kalyan',
+        origin: 'Cikajang',
+        image: '/Destination/Cafe, Bar, and Eatery/Kopi Kalyan.jpeg',
+        price: 'Rp 40k - 90k',
+        description: 'Coffee shop luas yang nyaman untuk meeting atau nongkrong.'
+    },
+    {
+        id: 18,
+        name: 'Smiljan Makarya',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/Smiljan Makarya.jpeg',
+        price: 'Rp 50k - 100k',
+        description: 'Cafe dengan konsep industrial yang instagramable.'
+    },
+    {
+        id: 19,
+        name: 'Ngoepi',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/Ngoepi.jpg',
+        price: 'Rp 20k - 50k',
+        description: 'Tempat ngopi santai harga bersahabat.'
+    },
+    {
+        id: 20,
+        name: 'Tsuki at the Alley',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley.jpg',
+        price: 'Rp 50k - 100k',
+        description: 'Hidden gem cafe dengan nuansa Jepang.'
+    },
+    {
+        id: 21,
+        name: 'Bossanova',
+        origin: 'Jakarta',
+        image: '/Destination/Cafe, Bar, and Eatery/Bossanova.jpeg',
+        price: 'Rp 50k - 150k',
+        description: 'Cafe dengan suasana retro yang unik.'
     }
 ];
 
@@ -143,14 +263,14 @@ const CulinarySection = () => {
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em'
                     }}>
-                        Kuliner Khas
+                        Spot Favorit
                     </span>
                     <h2 className="section-title" style={{ marginTop: '16px' }}>
-                        Cita Rasa<br />
-                        <span className="gradient-text">Jakarta</span>
+                        Cafe, Bar &<br />
+                        <span className="gradient-text">Eatery</span>
                     </h2>
                     <p className="section-subtitle" style={{ margin: '0 auto' }}>
-                        Nikmati kelezatan kuliner khas Betawi yang autentik dan menggugah selera.
+                        Jelajahi destinasi kuliner hits dan tempat nongkrong terbaik di Jakarta.
                     </p>
                 </div>
 

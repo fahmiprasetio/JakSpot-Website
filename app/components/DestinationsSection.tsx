@@ -15,50 +15,57 @@ const destinations: Destination[] = [
         id: 1,
         name: 'The Platform',
         category: 'Skyline',
-        image: '/Destination/The Platform Jakarta.webp',
+        image: '/Destination/Cafe, Bar, and Eatery/The Platform Jakarta.webp',
         description: 'View Bundaran HI dari atas gak pernah gagal bikin lo terpukau'
     },
     {
         id: 2,
         name: 'St. Regis Bar',
         category: 'Chill',
-        image: '/Destination/St Regis Jakarta Bar.jpg',
+        image: '/Destination/Cafe, Bar, and Eatery/St Regis Jakarta Bar.jpg',
         description: 'Jazz night dan cocktail dengan nuansa New York di Jakarta Selatan'
     },
     {
         id: 3,
         name: 'Sarang Semut',
         category: 'Arts',
-        image: '/Destination/sarang-semut.jpg',
+        image: '/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg',
         description: 'Vibes gua aesthetic di Cikini yang teksturnya unik parah'
     },
     {
         id: 4,
         name: 'Costess Cafe',
         category: 'Skyline',
-        image: '/Destination/Costess Cafe Jakarta.jpg',
+        image: '/Destination/Cafe, Bar, and Eatery/Costess Cafe Jakarta.jpg',
         description: 'Nongkrong cantik ditemenin gedung-gedung kaca Kuningan'
     },
     {
         id: 5,
         name: 'Row 9',
         category: 'Chill',
-        image: '/Destination/row9.jpg',
+        image: '/Destination/Cafe, Bar, and Eatery/row9.jpg',
         description: 'Spot outdoor di Blok M yang lagi hits banget buat nyantai sore'
     },
     {
         id: 6,
         name: 'Sarang Semut',
         category: 'Arsitektur',
-        image: '/Destination/sarang-semut2.jpg',
+        image: '/Destination/Cafe, Bar, and Eatery/sarang-semut2.jpg',
         description: 'Setiap sudutnya adalah karya seni, arsitektur organik yang memukau'
+    },
+    {
+        id: 7,
+        name: 'Chandra Naya',
+        category: 'Culture',
+        image: '/Destination/Chandra Naya.jpg',
+        description: 'Bangunan bersejarah dengan arsitektur Tionghoa yang otentik'
     }
 ];
 
 const DestinationsSection = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [activeFilter, setActiveFilter] = useState('Semua');
-    const filters = ['Semua', 'Skyline', 'Arsitektur', 'Chill', 'Arts'];
+    const filters = ['Semua', 'Skyline', 'Arsitektur', 'Chill', 'Arts', 'Culture'];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -78,27 +85,12 @@ const DestinationsSection = () => {
         return () => observer.disconnect();
     }, []);
 
-    // Parallax effect for cards
-    useEffect(() => {
-        const handleScroll = () => {
-            const cards = document.querySelectorAll('.destination-card');
-            cards.forEach((card, index) => {
-                const rect = card.getBoundingClientRect();
-                const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-                if (scrollProgress > 0 && scrollProgress < 1) {
-                    const offset = (scrollProgress - 0.5) * 50 * (index % 2 === 0 ? 1 : -1);
-                    (card as HTMLElement).style.transform = `translateY(${offset}px)`;
-                }
-            });
-        };
+    // Parallax effect removed as per user request
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    const filteredDestinations = activeFilter === 'Semua'
+    const filteredDestinations = (activeFilter === 'Semua'
         ? destinations
-        : destinations.filter(d => d.category === activeFilter);
+        : destinations.filter(d => d.category === activeFilter)
+    ).slice(0, 6);
 
     return (
         <section id="destinations" ref={sectionRef} className="section" style={{
@@ -201,7 +193,12 @@ const DestinationsSection = () => {
                                         objectFit: 'cover'
                                     }}
                                 />
-                                <div className="img-overlay" />
+                                <div style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 80%)',
+                                    zIndex: 1
+                                }} />
                             </div>
 
                             {/* Category Badge */}
@@ -222,7 +219,7 @@ const DestinationsSection = () => {
                             </div>
 
                             {/* Content */}
-                            <div style={{
+                            <div className="content-wrapper" style={{
                                 position: 'absolute',
                                 bottom: 0,
                                 left: 0,
@@ -234,26 +231,28 @@ const DestinationsSection = () => {
                                     fontFamily: 'var(--font-display)',
                                     fontSize: '1.8rem',
                                     fontWeight: '700',
-                                    marginBottom: '8px'
+                                    marginBottom: '8px',
+                                    color: 'white'
                                 }}>
                                     {destination.name}
                                 </h3>
                                 <p style={{
-                                    color: 'var(--text-muted)',
+                                    color: 'white',
                                     fontSize: '0.95rem'
                                 }}>
                                     {destination.description}
                                 </p>
 
                                 {/* Explore Button */}
-                                <div style={{
+                                <div className="explore-btn" style={{
                                     marginTop: '20px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '8px',
                                     color: 'var(--primary)',
                                     fontSize: '0.9rem',
-                                    fontWeight: '600'
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease'
                                 }}>
                                     <span>Jelajahi</span>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
