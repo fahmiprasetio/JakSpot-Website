@@ -15,43 +15,43 @@ const destinations: Destination[] = [
         id: 1,
         name: 'The Platform',
         category: 'Skyline',
-        image: 'https://images.unsplash.com/photo-1572569878864-1506b4d37d2f?auto=format&fit=crop&w=800&q=80',
+        image: '/Destination/The Platform Jakarta.webp',
         description: 'View Bundaran HI dari atas gak pernah gagal bikin lo terpukau'
     },
     {
         id: 2,
-        name: 'Tanatap Ampera',
-        category: 'Arsitektur',
-        image: 'https://images.unsplash.com/photo-1621683935816-724f746dc16f?auto=format&fit=crop&w=800&q=80',
-        description: 'Ngopi di sini berasa lagi di galeri seni, desainnya mind-blowing banget'
+        name: 'St. Regis Bar',
+        category: 'Chill',
+        image: '/Destination/St Regis Jakarta Bar.jpg',
+        description: 'Jazz night dan cocktail dengan nuansa New York di Jakarta Selatan'
     },
     {
         id: 3,
-        name: 'Urban Forest',
-        category: 'Chill',
-        image: 'https://images.unsplash.com/photo-1596280629532-34069818b76a?auto=format&fit=crop&w=800&q=80',
-        description: 'Escape sebentar dari macetnya Cipete, hirup udara seger di sini'
+        name: 'Sarang Semut',
+        category: 'Arts',
+        image: '/Destination/sarang-semut.jpg',
+        description: 'Vibes gua aesthetic di Cikini yang teksturnya unik parah'
     },
     {
         id: 4,
-        name: 'Sarang Semut',
-        category: 'Arts',
-        image: 'https://images.unsplash.com/photo-1510673322123-6449ee422b40?auto=format&fit=crop&w=800&q=80',
-        description: 'Vibes gua aesthetic di Blok M yang teksturnya unik parah'
-    },
-    {
-        id: 5,
         name: 'Costess Cafe',
         category: 'Skyline',
-        image: 'https://images.unsplash.com/photo-1481437156560-3205f6a55735?auto=format&fit=crop&w=800&q=80',
+        image: '/Destination/Costess Cafe Jakarta.jpg',
         description: 'Nongkrong cantik ditemenin gedung-gedung kaca Kuningan'
     },
     {
-        id: 6,
+        id: 5,
         name: 'Row 9',
         category: 'Chill',
-        image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80',
+        image: '/Destination/row9.jpg',
         description: 'Spot outdoor di Blok M yang lagi hits banget buat nyantai sore'
+    },
+    {
+        id: 6,
+        name: 'Sarang Semut',
+        category: 'Arsitektur',
+        image: '/Destination/sarang-semut2.jpg',
+        description: 'Setiap sudutnya adalah karya seni, arsitektur organik yang memukau'
     }
 ];
 

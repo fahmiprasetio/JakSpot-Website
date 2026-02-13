@@ -105,7 +105,10 @@ const Navbar = () => {
           alignItems: 'center',
           gap: '24px',
           willChange: 'transform, opacity',
-          pointerEvents: 'auto',
+          pointerEvents: menuOpen ? 'none' : 'auto',
+          opacity: menuOpen ? 0 : undefined,
+          visibility: menuOpen ? 'hidden' : 'visible',
+          transition: menuOpen ? 'opacity 0.3s ease, visibility 0.3s ease' : undefined,
         }}
       >
         {/* Big Logo Icon */}
@@ -153,6 +156,9 @@ const Navbar = () => {
           alignItems: 'center',
           gap: '6px',
           willChange: 'opacity',
+          opacity: menuOpen ? 0 : undefined,
+          visibility: menuOpen ? 'hidden' : 'visible',
+          transition: menuOpen ? 'opacity 0.3s ease, visibility 0.3s ease' : undefined,
         }}
       >
         <span className="mouse-btn">
@@ -289,15 +295,16 @@ const Navbar = () => {
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(10, 10, 15, 0.95)',
+          background: 'rgba(10, 10, 15, 0.85)',
           backdropFilter: 'blur(30px)',
           WebkitBackdropFilter: 'blur(30px)',
           zIndex: 999,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          gap: '0px',
+          gap: '4px',
+          paddingLeft: 'clamp(40px, 8vw, 120px)',
           opacity: menuOpen ? 1 : 0,
           visibility: menuOpen ? 'visible' : 'hidden',
           transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -308,27 +315,44 @@ const Navbar = () => {
             key={link.name}
             href={link.href}
             onClick={() => setMenuOpen(false)}
+            className="menu-link"
             style={{
               color: 'var(--foreground)',
               textDecoration: 'none',
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              fontWeight: '600',
-              padding: '16px 0',
+              fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
+              fontWeight: '500',
+              padding: '12px 0',
+              position: 'relative',
               opacity: menuOpen ? 1 : 0,
               transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
               transition: `all 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.08 + 0.15}s`,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--primary)';
-              e.currentTarget.style.transform = 'translateY(0) scale(1.05)';
+              e.currentTarget.style.color = 'var(--foreground)';
+              const underline = e.currentTarget.querySelector('.menu-underline') as HTMLElement;
+              if (underline) underline.style.width = '100%';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--foreground)';
-              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              const underline = e.currentTarget.querySelector('.menu-underline') as HTMLElement;
+              if (underline) underline.style.width = '0%';
             }}
           >
             {link.name}
+            <span
+              className="menu-underline"
+              style={{
+                position: 'absolute',
+                bottom: '8px',
+                left: '0',
+                width: '0%',
+                height: '2px',
+                background: 'var(--primary)',
+                borderRadius: '2px',
+                transition: 'width 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
           </a>
         ))}
 

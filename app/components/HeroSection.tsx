@@ -64,25 +64,26 @@ const HeroSection = ({ onLoadProgress, onLoadComplete }: HeroSectionProps) => {
     useEffect(() => {
         let loadedCount = 0;
         const images: HTMLImageElement[] = [];
+        const framesToLoad = TOTAL_FRAMES - START_FRAME + 1; // Only load available frames (70-240)
 
-        for (let i = 1; i <= TOTAL_FRAMES; i++) {
+        for (let i = START_FRAME; i <= TOTAL_FRAMES; i++) {
             const img = new Image();
             img.src = getFrameSrc(i);
             img.onload = () => {
                 loadedCount++;
-                const progress = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+                const progress = Math.round((loadedCount / framesToLoad) * 100);
                 setLoadProgress(progress);
                 onLoadProgressRef.current?.(progress);
-                if (loadedCount === TOTAL_FRAMES) {
+                if (loadedCount === framesToLoad) {
                     setIsLoaded(true);
                     onLoadCompleteRef.current?.();
                 }
             };
             img.onerror = () => {
                 loadedCount++;
-                const progress = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+                const progress = Math.round((loadedCount / framesToLoad) * 100);
                 onLoadProgressRef.current?.(progress);
-                if (loadedCount === TOTAL_FRAMES) {
+                if (loadedCount === framesToLoad) {
                     setIsLoaded(true);
                     onLoadCompleteRef.current?.();
                 }
