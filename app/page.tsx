@@ -1,13 +1,53 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import DestinationsSection from './components/DestinationsSection';
-import EventSection from './components/EventSection';
-import CultureSection from './components/CultureSection';
-import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
+
+// Skeleton placeholder for lazy-loaded sections
+const SectionSkeleton = () => (
+  <div style={{
+    minHeight: '60vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--dark-surface)',
+  }}>
+    <div style={{
+      width: '40px',
+      height: '40px',
+      border: '3px solid rgba(255, 107, 53, 0.2)',
+      borderTopColor: 'var(--primary)',
+      borderRadius: '50%',
+      animation: 'spin 0.8s linear infinite',
+    }} />
+    <style jsx>{`
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
+
+// Lazy-load below-fold sections — JS is fetched only when needed
+const DestinationsSection = dynamic(() => import('./components/DestinationsSection'), {
+  loading: () => <SectionSkeleton />,
+  ssr: true,
+});
+const EventSection = dynamic(() => import('./components/EventSection'), {
+  loading: () => <SectionSkeleton />,
+  ssr: true,
+});
+const CultureSection = dynamic(() => import('./components/CultureSection'), {
+  loading: () => <SectionSkeleton />,
+  ssr: true,
+});
+const Footer = dynamic(() => import('./components/Footer'), {
+  loading: () => <SectionSkeleton />,
+  ssr: true,
+});
 
 export default function Home() {
   const [loadProgress, setLoadProgress] = useState(0);

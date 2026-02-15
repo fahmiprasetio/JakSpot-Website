@@ -199,6 +199,8 @@ const EventSection = () => {
                             <img
                                 src={event.image}
                                 alt={event.title}
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -429,6 +431,8 @@ const EventSection = () => {
                             <img
                                 src={event.image}
                                 alt={event.title}
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     width: '100%',
                                     height: '100%',
