@@ -44,6 +44,9 @@ const CultureSection = dynamic(() => import('./components/CultureSection'), {
   loading: () => <SectionSkeleton />,
   ssr: true,
 });
+const ParallaxBridge = dynamic(() => import('./components/ParallaxBridge'), {
+  ssr: true,
+});
 const Footer = dynamic(() => import('./components/Footer'), {
   loading: () => <SectionSkeleton />,
   ssr: true,
@@ -156,6 +159,7 @@ export default function Home() {
             pointerEvents: 'none',
           }} />
           <DestinationsSection />
+          <ParallaxBridge />
           <EventSection />
           <CultureSection />
         </main>
