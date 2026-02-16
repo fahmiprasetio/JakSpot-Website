@@ -45,8 +45,10 @@ const CultureSection = dynamic(() => import('./components/CultureSection'), {
   ssr: true,
 });
 const ParallaxBridge = dynamic(() => import('./components/ParallaxBridge'), {
+  loading: () => <SectionSkeleton />,
   ssr: true,
 });
+
 const Footer = dynamic(() => import('./components/Footer'), {
   loading: () => <SectionSkeleton />,
   ssr: true,

@@ -208,8 +208,6 @@ const HeroSection = ({ onLoadProgress, onLoadComplete }: HeroSectionProps) => {
                     drawFrame(frameIndex);
                 }
 
-
-
                 // === TEXT SLIDES ===
                 // Unclamped progress (goes beyond 1.0 into bridge area)
                 const rawProgress = -rect.top / scrollableHeight;
@@ -455,10 +453,6 @@ const HeroSection = ({ onLoadProgress, onLoadComplete }: HeroSectionProps) => {
                         )}
                     </div>
                 ))}
-
-
-
-
 
                 {/* Loading overlay removed - handled by parent LoadingScreen */}
             </div>
