@@ -40,14 +40,7 @@ const EventSection = dynamic(() => import('./components/EventSection'), {
   loading: () => <SectionSkeleton />,
   ssr: true,
 });
-const CultureSection = dynamic(() => import('./components/CultureSection'), {
-  loading: () => <SectionSkeleton />,
-  ssr: true,
-});
-const ParallaxBridge = dynamic(() => import('./components/ParallaxBridge'), {
-  loading: () => <SectionSkeleton />,
-  ssr: true,
-});
+
 
 const Footer = dynamic(() => import('./components/Footer'), {
   loading: () => <SectionSkeleton />,
@@ -161,9 +154,19 @@ export default function Home() {
             pointerEvents: 'none',
           }} />
           <DestinationsSection />
-          <ParallaxBridge />
+
+
+
+          {/* Smooth Transition between Sections */}
+          <div style={{
+            position: 'relative',
+            height: '150px',
+            background: 'linear-gradient(to bottom, var(--dark-surface) 0%, var(--background) 100%)',
+            zIndex: 2,
+          }} />
+
           <EventSection />
-          <CultureSection />
+
         </main>
         <Footer />
       </div>

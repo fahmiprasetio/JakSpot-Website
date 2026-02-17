@@ -41,9 +41,9 @@ const ParallaxBridge = () => {
         <div ref={bridgeRef} style={{
             position: 'relative',
             zIndex: 10,
-            height: '65vh',
-            minHeight: '400px',
-            maxHeight: '700px',
+            height: '80vh',
+            minHeight: '500px',
+            maxHeight: '900px',
             overflow: 'hidden',
             backgroundColor: '#0a0a0f',
         }}>
@@ -53,13 +53,13 @@ const ParallaxBridge = () => {
                 ref={glowRef}
                 style={{
                     position: 'absolute',
-                    inset: '-30%',
+                    inset: '-50%',
                     zIndex: 0,
                     willChange: 'transform',
                     pointerEvents: 'none',
                     // Fade out towards the top using mask
-                    maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 40%, transparent 100%)',
-                    WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 40%, transparent 100%)',
+                    maskImage: 'linear-gradient(to top, black 0%, black 25%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.8) 55%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 90%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to top, black 0%, black 25%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.8) 55%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 90%, transparent 100%)',
                 }}
             >
                 <Image
@@ -105,7 +105,7 @@ const ParallaxBridge = () => {
                 }}
             >
                 <Image
-                    src="/Bridge (bangunan).png"
+                    src="/Bridge Upscale.png"
                     alt="Jakarta skyline silhouette"
                     fill
                     style={{
@@ -122,7 +122,7 @@ const ParallaxBridge = () => {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: '120px',
+                height: '100px',
                 background: 'linear-gradient(to bottom, var(--dark-surface) 0%, transparent 100%)',
                 zIndex: 3,
                 pointerEvents: 'none',
