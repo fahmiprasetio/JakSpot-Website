@@ -8,6 +8,7 @@ interface Destination {
     category: string;
     image: string;
     description: string;
+    video?: string;
 }
 
 const destinations: Destination[] = [
@@ -30,7 +31,8 @@ const destinations: Destination[] = [
         name: 'Sarang Semut',
         category: 'Arts',
         image: '/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg',
-        description: 'Vibes gua aesthetic di Cikini yang teksturnya unik parah'
+        description: 'Vibes gua aesthetic di Cikini yang teksturnya unik parah',
+        video: '/destination/Video Hover Effect/sarang semut hover.mp4'
     },
     {
         id: 4,
@@ -48,10 +50,10 @@ const destinations: Destination[] = [
     },
     {
         id: 6,
-        name: 'Sarang Semut',
-        category: 'Arsitektur',
-        image: '/Destination/Cafe, Bar, and Eatery/sarang-semut2.jpg',
-        description: 'Setiap sudutnya adalah karya seni, arsitektur organik yang memukau'
+        name: 'Toko Kopi Maru',
+        category: 'Chill',
+        image: '/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg',
+        description: 'Hidden gem di Pasar Baru dengan suasana vintage yang calming'
     },
     {
         id: 7,
@@ -65,6 +67,9 @@ const destinations: Destination[] = [
 const DestinationsSection = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [activeFilter, setActiveFilter] = useState('Semua');
+    const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+    const [wipingOutCards, setWipingOutCards] = useState<Set<number>>(new Set());
+    const wipeTimeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
     const filters = ['Semua', 'Skyline', 'Arsitektur', 'Chill', 'Arts', 'Culture'];
 
     useEffect(() => {
@@ -179,27 +184,110 @@ const DestinationsSection = () => {
                                 position: 'relative',
                                 height: '450px',
                                 cursor: 'pointer',
-                                transitionDelay: `${index * 0.1}s`
+                                transitionDelay: `${index * 0.1}s`,
+                                overflow: 'hidden',
+                                borderRadius: '16px'
+                            }}
+                            onMouseEnter={(e) => {
+                                const id = destination.id;
+                                // Cancel any pending wipe-out for this card
+                                if (wipeTimeoutsRef.current.has(id)) {
+                                    clearTimeout(wipeTimeoutsRef.current.get(id));
+                                    wipeTimeoutsRef.current.delete(id);
+                                }
+                                setWipingOutCards(prev => { const next = new Set(prev); next.delete(id); return next; });
+                                setHoveredCard(id);
+                                const video = e.currentTarget.querySelector('video');
+                                if (video) video.play();
+                            }}
+                            onMouseLeave={(e) => {
+                                const id = destination.id;
+                                setHoveredCard(null);
+                                setWipingOutCards(prev => { const next = new Set(prev); next.add(id); return next; });
+                                const timeout = setTimeout(() => {
+                                    setWipingOutCards(prev => { const next = new Set(prev); next.delete(id); return next; });
+                                    wipeTimeoutsRef.current.delete(id);
+                                }, 650);
+                                wipeTimeoutsRef.current.set(id, timeout);
+                                const video = e.currentTarget.querySelector('video');
+                                if (video) {
+                                    video.pause();
+                                    video.currentTime = 0;
+                                }
                             }}
                         >
-                            {/* Image */}
-                            <div className="img-wrapper" style={{ position: 'absolute', inset: 0 }}>
-                                <img
-                                    src={destination.image}
-                                    alt={destination.name}
-                                    loading="lazy"
-                                    decoding="async"
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover'
-                                    }}
-                                />
+                            {/* Image & Video Wrapper */}
+                            <div className="media-wrapper" style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '16px' }}>
+                                {/* Video Layer (Background) */}
+                                {destination.video && (
+                                    <video
+                                        muted
+                                        loop
+                                        playsInline
+                                        style={{
+                                            position: 'absolute',
+                                            inset: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            zIndex: 1
+                                        }}
+                                    >
+                                        <source src={destination.video} type="video/mp4" />
+                                    </video>
+                                )}
+
+                                {/* Image Layer (Foreground with Wipe Animation) */}
+                                <div style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    zIndex: 2,
+                                    transition: 'clip-path 0.65s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    clipPath: hoveredCard === destination.id && destination.video
+                                        ? 'inset(0 0 0 100%)'
+                                        : 'inset(0 0 0 0%)'
+                                }}>
+                                    <img
+                                        src={destination.image}
+                                        alt={destination.name}
+                                        loading="lazy"
+                                        decoding="async"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Wipe Line */}
+                                {destination.video && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        bottom: 0,
+                                        width: '3px',
+                                        background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.9) 30%, white 50%, rgba(255,255,255,0.9) 70%, transparent 100%)',
+                                        boxShadow: '0 0 12px 3px rgba(255,255,255,0.7)',
+                                        zIndex: 3,
+                                        pointerEvents: 'none',
+                                        transition: 'left 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease',
+                                        left: hoveredCard === destination.id
+                                            ? 'calc(100% + 3px)'
+                                            : wipingOutCards.has(destination.id)
+                                                ? '-3px'
+                                                : '0px',
+                                        opacity: hoveredCard === destination.id || wipingOutCards.has(destination.id) ? 1 : 0
+                                    }} />
+                                )}
+
+                                {/* Gradient Overlay (Always Visible) */}
                                 <div style={{
                                     position: 'absolute',
                                     inset: 0,
                                     background: 'linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 80%)',
-                                    zIndex: 1
+                                    zIndex: 4,
+                                    pointerEvents: 'none'
                                 }} />
                             </div>
 
@@ -208,7 +296,8 @@ const DestinationsSection = () => {
                                 position: 'absolute',
                                 top: '20px',
                                 left: '20px',
-                                zIndex: 10
+                                zIndex: 10,
+                                pointerEvents: 'none'
                             }}>
                                 <span className="glass" style={{
                                     padding: '8px 16px',
@@ -227,7 +316,8 @@ const DestinationsSection = () => {
                                 left: 0,
                                 right: 0,
                                 padding: '30px',
-                                zIndex: 10
+                                zIndex: 10,
+                                pointerEvents: 'none'
                             }}>
                                 <h3 style={{
                                     fontFamily: 'var(--font-display)',

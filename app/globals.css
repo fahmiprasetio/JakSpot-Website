@@ -208,10 +208,10 @@ body {
 }
 
 .card:hover {
-  transform: translateY(-10px);
-  border-color: rgba(255, 107, 53, 0.3);
+  transform: translateY(0);
+  border-color: rgba(255, 255, 255, 0.05);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(255, 107, 53, 0.1);
+    0 0 40px rgba(255, 255, 255, 0.15);
 }
 
 /* Image Hover Effect */
@@ -535,7 +535,7 @@ body {
 }
 
 .destination-card:hover {
-  transform: translateY(-3px) !important;
+  transform: translateY(0) !important;
   border-color: var(--primary);
   box-shadow: 0 10px 35px -5px rgba(255, 255, 255, 0.12);
 }
