@@ -24,7 +24,8 @@ const destinations: Destination[] = [
         name: 'St. Regis Bar',
         category: 'Chill',
         image: '/Destination/Cafe, Bar, and Eatery/St Regis Jakarta Bar.jpg',
-        description: 'Jazz night dan cocktail dengan nuansa New York di Jakarta Selatan'
+        description: 'Jazz night dan cocktail dengan nuansa New York di Jakarta Selatan',
+        video: '/Destination/Video Hover Effect/st regis hover.mp4'
     },
     {
         id: 3,
@@ -53,7 +54,8 @@ const destinations: Destination[] = [
         name: 'Toko Kopi Maru',
         category: 'Chill',
         image: '/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg',
-        description: 'Hidden gem di Pasar Baru dengan suasana vintage yang calming'
+        description: 'Hidden gem di Pasar Baru dengan suasana vintage yang calming',
+        video: '/Destination/Video Hover Effect/toko kopi maru hover.mp4'
     },
     {
         id: 7,
@@ -68,8 +70,6 @@ const DestinationsSection = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [activeFilter, setActiveFilter] = useState('Semua');
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-    const [wipingOutCards, setWipingOutCards] = useState<Set<number>>(new Set());
-    const wipeTimeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
     const filters = ['Semua', 'Skyline', 'Arsitektur', 'Chill', 'Arts', 'Culture'];
 
     useEffect(() => {
@@ -189,26 +189,12 @@ const DestinationsSection = () => {
                                 borderRadius: '16px'
                             }}
                             onMouseEnter={(e) => {
-                                const id = destination.id;
-                                // Cancel any pending wipe-out for this card
-                                if (wipeTimeoutsRef.current.has(id)) {
-                                    clearTimeout(wipeTimeoutsRef.current.get(id));
-                                    wipeTimeoutsRef.current.delete(id);
-                                }
-                                setWipingOutCards(prev => { const next = new Set(prev); next.delete(id); return next; });
-                                setHoveredCard(id);
+                                setHoveredCard(destination.id);
                                 const video = e.currentTarget.querySelector('video');
                                 if (video) video.play();
                             }}
                             onMouseLeave={(e) => {
-                                const id = destination.id;
                                 setHoveredCard(null);
-                                setWipingOutCards(prev => { const next = new Set(prev); next.add(id); return next; });
-                                const timeout = setTimeout(() => {
-                                    setWipingOutCards(prev => { const next = new Set(prev); next.delete(id); return next; });
-                                    wipeTimeoutsRef.current.delete(id);
-                                }, 650);
-                                wipeTimeoutsRef.current.set(id, timeout);
                                 const video = e.currentTarget.querySelector('video');
                                 if (video) {
                                     video.pause();
@@ -271,13 +257,9 @@ const DestinationsSection = () => {
                                         boxShadow: '0 0 12px 3px rgba(255,255,255,0.7)',
                                         zIndex: 3,
                                         pointerEvents: 'none',
-                                        transition: 'left 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease',
-                                        left: hoveredCard === destination.id
-                                            ? 'calc(100% + 3px)'
-                                            : wipingOutCards.has(destination.id)
-                                                ? '-3px'
-                                                : '0px',
-                                        opacity: hoveredCard === destination.id || wipingOutCards.has(destination.id) ? 1 : 0
+                                        transition: 'left 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease',
+                                        left: hoveredCard === destination.id ? 'calc(100% + 3px)' : '0px',
+                                        opacity: hoveredCard === destination.id ? 1 : 0
                                     }} />
                                 )}
 
