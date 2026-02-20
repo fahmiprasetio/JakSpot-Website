@@ -315,16 +315,13 @@ const Footer = () => {
                     maxWidth: '1400px',
                     margin: '0 auto',
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
                     alignItems: 'center',
                     flexWrap: 'wrap',
                     gap: '16px'
                 }}>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                        © 2026 JakSpot. Semua hak dilindungi.
-                    </p>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                        Dibuat dengan ❤️ untuk Jakarta
+                        © 2026 JakSpot. All rights reserved.
                     </p>
                 </div>
             </div>
