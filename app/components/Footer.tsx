@@ -211,17 +211,10 @@ const Footer = () => {
                         </h4>
                         <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {footerLinks.explore.map((link) => (
-                                <li key={link.name}>
+                                <li key={link.name} style={{ overflow: 'visible' }}>
                                     <a
                                         href={link.href}
-                                        style={{
-                                            color: 'var(--text-muted)',
-                                            textDecoration: 'none',
-                                            transition: 'color 0.3s',
-                                            display: 'inline-block'
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                                        className="footer-link"
                                     >
                                         {link.name}
                                     </a>
@@ -243,17 +236,10 @@ const Footer = () => {
                         </h4>
                         <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {footerLinks.info.map((link) => (
-                                <li key={link.name}>
+                                <li key={link.name} style={{ overflow: 'visible' }}>
                                     <a
                                         href={link.href}
-                                        style={{
-                                            color: 'var(--text-muted)',
-                                            textDecoration: 'none',
-                                            transition: 'color 0.3s',
-                                            display: 'inline-block'
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                                        className="footer-link"
                                     >
                                         {link.name}
                                     </a>
