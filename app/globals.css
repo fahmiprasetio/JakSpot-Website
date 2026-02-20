@@ -179,7 +179,6 @@ body {
 .section {
   position: relative;
   z-index: 2;
-  min-height: 100vh;
   padding: 120px 5%;
 }
 

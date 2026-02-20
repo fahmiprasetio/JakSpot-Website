@@ -134,7 +134,7 @@ const EventSection = () => {
                 background: 'var(--background)',
                 position: 'relative',
                 overflow: 'hidden',
-                padding: '120px 0',
+                padding: '60px 0',
             }}
         >
             {/* Section Header */}

@@ -160,7 +160,7 @@ export default function Home() {
           {/* Smooth Transition between Sections */}
           <div style={{
             position: 'relative',
-            height: '150px',
+            height: '40px',
             background: 'linear-gradient(to bottom, var(--dark-surface) 0%, var(--background) 100%)',
             zIndex: 2,
           }} />
