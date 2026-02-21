@@ -12,16 +12,6 @@ const Navbar = () => {
   // Scroll threshold: how quickly the logo transitions (in px)
   const SCROLL_THRESHOLD = 300;
 
-  // Prevent body scroll when menu is open
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
-
   const handleScroll = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
@@ -81,6 +71,19 @@ const Navbar = () => {
     };
   }, [handleScroll]);
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+      if (heroLogoRef.current) heroLogoRef.current.style.opacity = '0';
+      if (scrollIndicatorGroupRef.current) scrollIndicatorGroupRef.current.style.opacity = '0';
+    } else {
+      document.body.style.overflow = '';
+      handleScroll();
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen, handleScroll]);
+
   const navLinks = [
     { name: 'Beranda', href: '#hero' },
     { name: 'Destinasi', href: '#destinations' },
@@ -106,9 +109,6 @@ const Navbar = () => {
           gap: '24px',
           willChange: 'transform, opacity',
           pointerEvents: menuOpen ? 'none' : 'auto',
-          opacity: menuOpen ? 0 : undefined,
-          visibility: menuOpen ? 'hidden' : 'visible',
-          transition: menuOpen ? 'opacity 0.3s ease, visibility 0.3s ease' : undefined,
         }}
       >
         {/* Big Logo Icon */}
@@ -156,9 +156,6 @@ const Navbar = () => {
           alignItems: 'center',
           gap: '6px',
           willChange: 'opacity',
-          opacity: menuOpen ? 0 : undefined,
-          visibility: menuOpen ? 'hidden' : 'visible',
-          transition: menuOpen ? 'opacity 0.3s ease, visibility 0.3s ease' : undefined,
         }}
       >
         <span className="mouse-btn">
