@@ -395,7 +395,7 @@ const DestinationsSection = () => {
           style={{ textAlign: "center", marginTop: "60px" }}
         >
           <a
-            href="#"
+            href="/destinations"
             className="btn-secondary"
             style={{ textDecoration: "none" }}
           >

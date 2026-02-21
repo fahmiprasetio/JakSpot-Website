@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) => {
+  const isHomepage = variant === 'homepage';
   const [menuOpen, setMenuOpen] = useState(false);
   const heroLogoRef = useRef<HTMLDivElement>(null);
   const navLogoRef = useRef<HTMLDivElement>(null);
@@ -19,25 +20,25 @@ const Navbar = () => {
       const y = window.scrollY;
       const progress = Math.min(y / SCROLL_THRESHOLD, 1);
 
-      // === HERO LOGO (centered, large) ===
-      if (heroLogoRef.current) {
-        const opacity = Math.max(1 - progress * 2.5, 0); // fades out faster
-        const scale = 1 - progress * 0.6; // 1 → 0.4
+      // === HERO LOGO (centered, large) — homepage only ===
+      if (isHomepage && heroLogoRef.current) {
+        const opacity = Math.max(1 - progress * 2.5, 0);
+        const scale = 1 - progress * 0.6;
         const moveUp = progress * 120;
         heroLogoRef.current.style.opacity = `${opacity}`;
         heroLogoRef.current.style.transform = `translate(-50%, -50%) scale(${scale}) translateY(-${moveUp}px)`;
         heroLogoRef.current.style.pointerEvents = opacity > 0.1 ? 'auto' : 'none';
       }
 
-      // === SCROLL INDICATOR ===
-      if (scrollIndicatorGroupRef.current) {
+      // === SCROLL INDICATOR — homepage only ===
+      if (isHomepage && scrollIndicatorGroupRef.current) {
         const indicatorOpacity = Math.max(1 - progress * 4, 0);
         scrollIndicatorGroupRef.current.style.opacity = `${indicatorOpacity}`;
       }
 
       // === NAVBAR LOGO (small, top-left) ===
-      if (navLogoRef.current) {
-        const navOpacity = Math.min(progress * 2.5, 1); // fades in
+      if (navLogoRef.current && isHomepage) {
+        const navOpacity = Math.min(progress * 2.5, 1);
         navLogoRef.current.style.opacity = `${navOpacity}`;
       }
 
@@ -60,7 +61,7 @@ const Navbar = () => {
         navbar.style.boxShadow = scrolled ? '0 8px 32px rgba(0, 0, 0, 0.3)' : 'none';
       }
     });
-  }, []);
+  }, [isHomepage]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -75,26 +76,33 @@ const Navbar = () => {
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden';
-      if (heroLogoRef.current) heroLogoRef.current.style.opacity = '0';
-      if (scrollIndicatorGroupRef.current) scrollIndicatorGroupRef.current.style.opacity = '0';
+      if (isHomepage && heroLogoRef.current) heroLogoRef.current.style.opacity = '0';
+      if (isHomepage && scrollIndicatorGroupRef.current) scrollIndicatorGroupRef.current.style.opacity = '0';
     } else {
       document.body.style.overflow = '';
       handleScroll();
     }
     return () => { document.body.style.overflow = ''; };
-  }, [menuOpen, handleScroll]);
+  }, [menuOpen, handleScroll, isHomepage]);
 
-  const navLinks = [
+  const navLinks = isHomepage ? [
     { name: 'Beranda', href: '#hero' },
     { name: 'Destinasi', href: '#destinations' },
     { name: 'Kuliner', href: '#culinary' },
     { name: 'Budaya', href: '#culture' },
     { name: 'Kontak', href: '#contact' },
+  ] : [
+    { name: 'Beranda', href: '/' },
+    { name: 'Destinasi', href: '/destinations' },
+    { name: 'Kuliner', href: '/#culinary' },
+    { name: 'Budaya', href: '/#culture' },
+    { name: 'Kontak', href: '/#contact' },
   ];
 
   return (
     <>
       {/* === HERO LOGO — Centered, Large, visible at top === */}
+      {isHomepage && (
       <div
         ref={heroLogoRef}
         style={{
@@ -141,8 +149,10 @@ const Navbar = () => {
 
 
       </div>
+      )}
 
       {/* === SCROLL INDICATOR — Below hero logo === */}
+      {isHomepage && (
       <div
         ref={scrollIndicatorGroupRef}
         style={{
@@ -171,6 +181,7 @@ const Navbar = () => {
           Scroll untuk menjelajahi
         </span>
       </div>
+      )}
 
       {/* === NAVBAR — Top bar with small logo appearing on scroll === */}
       <div
@@ -203,14 +214,14 @@ const Navbar = () => {
           }}
         >
           {/* Navbar Logo — fades in on scroll */}
-          <a href="#hero" style={{ textDecoration: 'none', zIndex: 1001 }}>
+          <a href={isHomepage ? '#hero' : '/'} style={{ textDecoration: 'none', zIndex: 1001 }}>
             <div
               ref={navLogoRef}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                opacity: 0,
+                opacity: isHomepage ? 0 : 1,
                 transition: 'none',
               }}
             >
