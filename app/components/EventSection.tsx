@@ -20,7 +20,7 @@ const events: EventItem[] = [
         category: 'Festival',
         date: 'Juni - Juli 2026',
         location: 'JIExpo Kemayoran',
-        description: 'Pameran dan hiburan tahunan terbesar di Jakarta. Nikmati wahana, konser musik, dan ribuan stand kuliner & produk lokal.',
+        description: 'Tiap tahun hadir, tiap tahun lo balik lagi. Wahana, konser, dan ribuan booth yang bikin kantong jebol tapi happy.',
         image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1920&q=80',
     },
     {
@@ -29,7 +29,7 @@ const events: EventItem[] = [
         category: 'Musik',
         date: 'Maret 2026',
         location: 'JIExpo Kemayoran',
-        description: 'Festival jazz bertaraf internasional dengan line-up artis dunia. Tiga hari penuh musik berkualitas tinggi.',
+        description: 'Tiga hari, ratusan artis, satu kota. Ngaku suka jazz tapi belum pernah ke sini? Pertanyain dirimu.',
         image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=1920&q=80',
     },
     {
@@ -38,7 +38,7 @@ const events: EventItem[] = [
         category: 'Musik',
         date: 'Desember 2026',
         location: 'JIExpo Kemayoran',
-        description: 'Festival musik EDM terbesar di Asia Tenggara. Pengalaman yang tak terlupakan dengan DJ-DJ kelas dunia.',
+        description: 'EDM festival terbesar di Asia Tenggara ada di Jakarta. Drop bassnya bikin dada getar, literally.',
         image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1920&q=80',
     },
     {
@@ -47,7 +47,7 @@ const events: EventItem[] = [
         category: 'Seni',
         date: 'Agustus 2026',
         location: 'Jakarta Convention Center',
-        description: 'Pameran seni kontemporer terbesar di Indonesia, menampilkan karya dari galeri-galeri ternama Asia Tenggara.',
+        description: 'Pameran seni kontemporer terbesar se-Indonesia. Foto aesthetic dijamin, tapi lo bakal genuinely terkesima juga.',
         image: 'https://images.unsplash.com/photo-1561839561-b13bcfe95249?auto=format&fit=crop&w=1920&q=80',
     },
     {
@@ -56,7 +56,7 @@ const events: EventItem[] = [
         category: 'Budaya',
         date: 'Juni 2026',
         location: 'Kemang, Jakarta Selatan',
-        description: 'Festival budaya Betawi yang menampilkan tradisi palang pintu, pencak silat, dan kesenian khas Betawi.',
+        description: 'Pencak silat, ondel-ondel, dan tradisi Betawi yang masih hidup. Ini bagian dari kota lo, ketauin dulu.',
         image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1920&q=80',
     },
 ];
@@ -157,7 +157,7 @@ const EventSection = () => {
                     <span className="gradient-text">Festival</span>
                 </h2>
                 <p className="section-subtitle" style={{ margin: '0 auto' }}>
-                    Jangan lewatkan event dan festival seru yang berlangsung di Jakarta.
+                    Jakarta gak pernah sepi. Tiap bulan ada aja yang worth it buat lo datengin — ini yang paling gak boleh lo skip.
                 </p>
             </div>
 

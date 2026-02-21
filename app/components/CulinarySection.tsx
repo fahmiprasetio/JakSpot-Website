@@ -18,7 +18,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/waroeng roekoen.jpg',
         price: 'Rp 50k - 150k',
-        description: 'Suasana nyaman dengan sajian kuliner yang menggugah selera.'
+        description: 'Masakan rumahan yang bikin lo makan banyak tanpa drama dan tanpa kantong jebol'
     },
     {
         id: 2,
@@ -26,7 +26,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Senayan',
         image: '/Destination/Cafe, Bar, and Eatery/The Cafe Hotel Mulia.jpg',
         price: 'Rp 500k++',
-        description: 'Experience dining mewah dengan pilihan menu internasional terbaik.'
+        description: 'Kalau lo mau impress seseorang, ini tempatnya. Fine dining level dewa di jantung Senayan'
     },
     {
         id: 3,
@@ -34,7 +34,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/The Platform Jakarta.webp',
         price: 'Rp 100k - 300k',
-        description: 'Bar dengan pemandangan kota Jakarta yang menakjubkan.'
+        description: 'Cocktail sambil ngeliatin Bundaran HI dari atas? Serius, ini nyata dan lo bisa'
     },
     {
         id: 4,
@@ -42,7 +42,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Kuningan',
         image: '/Destination/Cafe, Bar, and Eatery/St Regis Jakarta Bar.jpg',
         price: 'Rp 200k++',
-        description: 'Jazz bar elegan dengan koleksi cocktail premium.'
+        description: 'Jazz live, cocktail premium, WiFi kenceng. New York vibe tapi koordinatnya Kuningan'
     },
     {
         id: 5,
@@ -50,7 +50,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg',
         price: 'Rp 50k - 100k',
-        description: 'Tempat nongkrong unik dengan desain artistik.'
+        description: 'Interior gua batu yang literally unik parah, setiap sudut foto lo bakal auto keren'
     },
     {
         id: 6,
@@ -58,7 +58,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Kuningan',
         image: '/Destination/Cafe, Bar, and Eatery/Costess Cafe Jakarta.jpg',
         price: 'Rp 150k - 300k',
-        description: 'Rooftop bar dengan view 360 derajat kota Jakarta.'
+        description: 'View gedung kaca Kuningan dari atas sambil pegang cocktail. Gak ada yang lebih Jakarta dari ini'
     },
     {
         id: 7,
@@ -66,7 +66,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Blok M',
         image: '/Destination/Cafe, Bar, and Eatery/row9.jpg',
         price: 'Rp 50k - 150k',
-        description: 'Cafe hits di Blok M dengan suasana yang cozy.'
+        description: 'Outdoor vibes di Blok M, cocok banget buat sore-sorean sambil nunggu macet kelar'
     },
     {
         id: 8,
@@ -74,7 +74,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'BSD / Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Masagi Coffee.webp',
         price: 'Rp 30k - 70k',
-        description: 'Kopi berkualitas dengan suasana taman yang asri.'
+        description: 'Ngopi di tengah taman, gak ada drama, chill total'
     },
     {
         id: 9,
@@ -82,7 +82,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Tugo Coffee.jpg',
         price: 'Rp 30k - 80k',
-        description: 'Spot ngopi favorit dengan biji kopi pilihan.'
+        description: 'Single origin yang dikerjain serius, buat lo yang udah beyond kopi sachet'
     },
     {
         id: 10,
@@ -90,7 +90,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Senopati',
         image: '/Destination/Cafe, Bar, and Eatery/Kurasu.jpg',
         price: 'Rp 50k - 100k',
-        description: 'Cabang coffee shop populer dari Kyoto.'
+        description: 'Straight from Kyoto. Precision coffee yang bikin lo ngerti kenapa orang rela bayar mahal'
     },
     {
         id: 11,
@@ -98,7 +98,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/HOMS.jpg',
         price: 'Rp 50k - 150k',
-        description: 'Homey vibes cafe yang cocok untuk work from cafe.'
+        description: 'Vibes rumah orang kaya yang cozy banget, WiFi-nya kenceng, cocok WFC seharian'
     },
     {
         id: 12,
@@ -106,7 +106,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'PIK',
         image: '/Destination/Cafe, Bar, and Eatery/Salty Salty.jpg',
         price: 'Rp 50k - 150k',
-        description: 'Cafe estetik di PIK dengan menu brunch andalan.'
+        description: 'Brunch yang instagramable parah tapi rasanya beneran enak, bukan cuma cantik doang'
     },
     {
         id: 13,
@@ -114,7 +114,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: "/Destination/Cafe, Bar, and Eatery/Billy's Block.jpeg",
         price: 'Rp 50k - 150k',
-        description: 'Tempat hangout seru dengan musik dan vibes yang asik.'
+        description: 'Live music, crowd asik, vibes naik terus tiap malam. Weekend lo harus di sini'
     },
     {
         id: 14,
@@ -122,7 +122,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/RM Fariz.jpeg',
         price: 'Rp 30k - 80k',
-        description: 'Rumah makan legendaris dengan cita rasa nusantara.'
+        description: 'Cita rasa nusantara yang jujur dan familiar, harga yang gak bikin lo overthinking'
     },
     {
         id: 15,
@@ -130,7 +130,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Fatmawati',
         image: '/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg',
         price: 'Rp 30k - 70k',
-        description: 'Kopi susu gula aren yang creamy dan nagih.'
+        description: 'Gula aren, susu, kopi. Formula sederhana yang bikin lo balik lagi dan lagi'
     },
     {
         id: 16,
@@ -138,7 +138,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Dudung Maman Kopi.jpg',
         price: 'Rp 20k - 50k',
-        description: 'Warung kopi sederhana dengan rasa istimewa.'
+        description: 'Harga warung tapi kualitasnya specialty. Temuan terbaik yang lo mau flex ke temen'
     },
     {
         id: 17,
@@ -146,7 +146,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Cikajang',
         image: '/Destination/Cafe, Bar, and Eatery/Kopi Kalyan.jpeg',
         price: 'Rp 40k - 90k',
-        description: 'Coffee shop luas yang nyaman untuk meeting atau nongkrong.'
+        description: 'Luas, adem, WiFi lancar. Surga buat lo yang kerja remote tapi butuh suasana baru'
     },
     {
         id: 18,
@@ -154,7 +154,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Smiljan Makarya.jpeg',
         price: 'Rp 50k - 100k',
-        description: 'Cafe dengan konsep industrial yang instagramable.'
+        description: 'Industrial vibes yang foto-fotonya auto kece dan kopi-nya dikerjain dengan serius'
     },
     {
         id: 19,
@@ -162,7 +162,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Ngoepi.jpg',
         price: 'Rp 20k - 50k',
-        description: 'Tempat ngopi santai harga bersahabat.'
+        description: 'Santai, murah, dan enak. Trifecta langka yang jarang banget lo temuin sekaligus'
     },
     {
         id: 20,
@@ -170,7 +170,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley.jpg',
         price: 'Rp 50k - 100k',
-        description: 'Hidden gem cafe dengan nuansa Jepang.'
+        description: 'Gang tersembunyi dengan nuansa malam Tokyo. Lo harus nemu sendiri buat ngerasainnya'
     },
     {
         id: 21,
@@ -178,7 +178,7 @@ const culinaryItems: CulinaryItem[] = [
         origin: 'Jakarta',
         image: '/Destination/Cafe, Bar, and Eatery/Bossanova.jpeg',
         price: 'Rp 50k - 150k',
-        description: 'Cafe dengan suasana retro yang unik.'
+        description: 'Retro yang gak dipaksain, malah bikin lo pengen duduk lama-lama dan gak mau pulang'
     }
 ];
 
@@ -270,7 +270,7 @@ const CulinarySection = () => {
                         <span className="gradient-text">Eatery</span>
                     </h2>
                     <p className="section-subtitle" style={{ margin: '0 auto' }}>
-                        Jelajahi destinasi kuliner hits dan tempat nongkrong terbaik di Jakarta.
+                        Dari kopi yang serius sampe rooftop buat flex, ini daftar wajib lo kalau lagi muter-muter Jakarta.
                     </p>
                 </div>
 

@@ -6,17 +6,17 @@ const cultureItems = [
     {
         title: 'Ondel-Ondel',
         image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=800&q=80',
-        description: 'Boneka raksasa yang menjadi ikon budaya Betawi, hadir di berbagai acara pesta dan perayaan.'
+        description: 'Ikon paling ikonik dari Jakarta. Muka yang agak serem itu justru lambang pelindung, bukan buat nakut-nakutin.'
     },
     {
         title: 'Tari Topeng',
         image: 'https://images.unsplash.com/photo-1545893835-abaa50cbe628?auto=format&fit=crop&w=800&q=80',
-        description: 'Tarian tradisional dengan topeng yang menggambarkan berbagai karakter wayang.'
+        description: 'Di balik topeng kayu itu ada cerita panjang. Setiap gerakan punya makna, setiap warna punya pesan.'
     },
     {
         title: 'Lenong',
         image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
-        description: 'Seni teater rakyat Betawi dengan dialog yang khas dan menghibur.'
+        description: 'Teater rakyat Betawi yang pecah banget. Penuh humor khas Jakarta tapi nyentil juga. Drama, tapi yang bikin ngakak.'
     }
 ];
 
@@ -89,15 +89,14 @@ const CultureSection = () => {
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em'
                     }}>
-                        Warisan Budaya
+                        Jangan Sampe Lo Lupa
                     </span>
                     <h2 className="section-title" style={{ marginTop: '16px' }}>
-                        Kekayaan Budaya<br />
+                        Akar Budaya<br />
                         <span className="gradient-text">Betawi</span>
                     </h2>
                     <p className="section-subtitle" style={{ margin: '0 auto' }}>
-                        Telusuri warisan budaya Betawi yang kaya dan penuh warna,
-                        dari kesenian tradisional hingga adat istiadat yang masih lestari.
+                        Jakarta itu bukan cuma gedung tinggi dan macet. Ada budaya Betawi yang udah ada jauh sebelum semua itu, dan masih hidup sampai sekarang.
                     </p>
                 </div>
 

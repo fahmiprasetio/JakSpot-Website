@@ -75,13 +75,13 @@ const Footer = () => {
                         fontWeight: '700',
                         marginBottom: '16px'
                     }}>
-                        Jangan Lewatkan <span className="gradient-text">Update</span>
+                        Stay in the <span className="gradient-text">Loop</span>
                     </h3>
                     <p style={{
                         color: 'var(--text-muted)',
                         marginBottom: '32px'
                     }}>
-                        Dapatkan info terbaru tentang event, destinasi, dan kuliner Jakarta langsung ke inbox Anda.
+                        Drop email lo di sini, kita kirimin info spot baru, event terdekat, dan hal-hal Jakarta yang worth it.
                     </p>
 
                     <form style={{
@@ -94,7 +94,7 @@ const Footer = () => {
                     }}>
                         <input
                             type="email"
-                            placeholder="Masukkan email Anda"
+                            placeholder="Email lo..."
                             style={{
                                 flex: '1',
                                 minWidth: '250px',
