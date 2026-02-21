@@ -464,6 +464,17 @@ const EventSection = () => {
                         </button>
                     ))}
                 </div>
+
+                {/* View All Button */}
+                <div style={{ textAlign: 'center', marginTop: '48px' }}>
+                    <a
+                        href="/event"
+                        className="btn-secondary"
+                        style={{ textDecoration: 'none' }}
+                    >
+                        Lihat Semua Event
+                    </a>
+                </div>
             </div>
         </section>
     );

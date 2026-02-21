@@ -87,15 +87,13 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
 
   const navLinks = isHomepage ? [
     { name: 'Beranda', href: '#hero' },
-    { name: 'Destinasi', href: '#destinations' },
-    { name: 'Kuliner', href: '#culinary' },
-    { name: 'Budaya', href: '#culture' },
+    { name: 'Destinasi', href: '/destinations' },
+    { name: 'Event', href: '/event' },
     { name: 'Kontak', href: '#contact' },
   ] : [
     { name: 'Beranda', href: '/' },
     { name: 'Destinasi', href: '/destinations' },
-    { name: 'Kuliner', href: '/#culinary' },
-    { name: 'Budaya', href: '/#culture' },
+    { name: 'Event', href: '/event' },
     { name: 'Kontak', href: '/#contact' },
   ];
 
