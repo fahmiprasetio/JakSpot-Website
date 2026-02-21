@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 interface Destination {
   id: number;
   name: string;
+  slug: string;
   category: string;
   image: string;
   description: string;
@@ -15,6 +16,7 @@ const destinations: Destination[] = [
   {
     id: 1,
     name: "Sarang Semut",
+    slug: "sarang-semut",
     category: "Arts",
     image: "/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg",
     description: "Vibes gua aesthetic di Cikini yang teksturnya unik parah",
@@ -23,6 +25,7 @@ const destinations: Destination[] = [
   {
     id: 2,
     name: "Smiljan Makarya",
+    slug: "smiljan-makarya",
     category: "Arts",
     image: "/Destination/Cafe, Bar, and Eatery/Smiljan Makarya.jpeg",
     description:
@@ -32,6 +35,7 @@ const destinations: Destination[] = [
   {
     id: 3,
     name: "Tsuki at the Alley",
+    slug: "tsuki-at-the-alley",
     category: "Chill",
     image: "/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley.jpg",
     description: "Gang tersembunyi di Kemang yang punya nuansa malam Tokyo",
@@ -40,6 +44,7 @@ const destinations: Destination[] = [
   {
     id: 4,
     name: "Salty Salty",
+    slug: "salty-salty-pik",
     category: "Skyline",
     image: "/Destination/Cafe, Bar, and Eatery/Salty Salty.jpg",
     description: "Rooftop di Menteng yang golden hour-nya gak ada obat",
@@ -48,6 +53,7 @@ const destinations: Destination[] = [
   {
     id: 5,
     name: "Toko Kopi Maru",
+    slug: "toko-kopi-maru",
     category: "Chill",
     image: "/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg",
     description: "Hidden gem di Pasar Baru dengan suasana vintage yang calming",
@@ -56,6 +62,7 @@ const destinations: Destination[] = [
   {
     id: 6,
     name: "Chandra Naya",
+    slug: "chandra-naya",
     category: "Culture",
     image: "/Destination/Chandra Naya.jpg",
     description: "Bangunan bersejarah dengan arsitektur Tionghoa yang otentik",
@@ -197,7 +204,8 @@ const DestinationsSection = () => {
           }}
         >
           {filteredDestinations.map((destination, index) => (
-            <div
+            <a
+              href={`/destinations/${destination.slug}`}
               key={destination.id}
               className="card destination-card reveal"
               style={{
@@ -207,6 +215,8 @@ const DestinationsSection = () => {
                 transitionDelay: `${index * 0.1}s`,
                 overflow: "hidden",
                 borderRadius: "16px",
+                textDecoration: "none",
+                display: "block",
               }}
               onMouseEnter={() => setHoveredCard(destination.id)}
               onMouseLeave={() => setHoveredCard(null)}
@@ -385,7 +395,7 @@ const DestinationsSection = () => {
                   </svg>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
 

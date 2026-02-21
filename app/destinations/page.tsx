@@ -3,222 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Navbar from '../components/Navbar';
+import allDestinations from '../data/destinations';
 
 const Footer = dynamic(() => import('../components/Footer'), { ssr: true });
-
-interface Destination {
-  id: number;
-  name: string;
-  category: string;
-  location: string;
-  image: string;
-  description: string;
-  hoverImage?: string;
-}
-
-const allDestinations: Destination[] = [
-  // === KOPI ===
-  {
-    id: 1,
-    name: 'Tugo Coffee',
-    category: 'Kopi',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/Tugo Coffee.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Tugo Coffee 2.jpg',
-    description: 'Single origin yang dikerjain serius, buat lo yang udah beyond kopi sachet',
-  },
-  {
-    id: 2,
-    name: 'Kurasu Kissaten',
-    category: 'Kopi',
-    location: 'Senopati',
-    image: '/Destination/Cafe, Bar, and Eatery/Kurasu.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Kurasu 2.jpg',
-    description: 'Straight from Kyoto. Precision coffee yang bikin lo ngerti kenapa orang rela bayar mahal',
-  },
-  {
-    id: 3,
-    name: 'Masagi Coffee',
-    category: 'Kopi',
-    location: 'BSD',
-    image: '/Destination/Cafe, Bar, and Eatery/Masagi Coffee.webp',
-    description: 'Ngopi di tengah taman, gak ada drama, chill total',
-  },
-  {
-    id: 4,
-    name: 'Toko Kopi Maru',
-    category: 'Kopi',
-    location: 'Fatmawati',
-    image: '/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru 2.jpeg',
-    description: 'Gula aren, susu, kopi. Formula sederhana yang bikin lo balik lagi dan lagi',
-  },
-  {
-    id: 5,
-    name: 'Dudung Maman Kopi',
-    category: 'Kopi',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/Dudung Maman Kopi.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Dudung Maman Kopi 2.jpg',
-    description: 'Harga warung tapi kualitasnya specialty. Temuan terbaik yang lo mau flex ke temen',
-  },
-  {
-    id: 6,
-    name: 'Kopi Kalyan',
-    category: 'Kopi',
-    location: 'Cikajang',
-    image: '/Destination/Cafe, Bar, and Eatery/Kopi Kalyan.jpeg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Kopi Kalyan 2.jpeg',
-    description: 'Luas, adem, WiFi lancar. Surga buat lo yang kerja remote tapi butuh suasana baru',
-  },
-  {
-    id: 7,
-    name: 'Ngoepi',
-    category: 'Kopi',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/Ngoepi.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Ngoepi 2.jpg',
-    description: 'Santai, murah, dan enak. Trifecta langka yang jarang banget lo temuin sekaligus',
-  },
-
-  // === CAFE ===
-  {
-    id: 8,
-    name: 'HOMS Jakarta',
-    category: 'Cafe',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/HOMS.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/HOMS 2.jpg',
-    description: 'Vibes rumah orang kaya yang cozy banget, WiFi-nya kenceng, cocok WFC seharian',
-  },
-  {
-    id: 9,
-    name: 'Smiljan Makarya',
-    category: 'Cafe',
-    location: 'Jakarta Selatan',
-    image: '/Destination/Cafe, Bar, and Eatery/Smiljan Makarya.jpeg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Smiljan Makarya 2.jpeg',
-    description: 'Gallery-cafe fusion yang vibe-nya benar-benar beda dari tempat ngopi biasa',
-  },
-  {
-    id: 10,
-    name: 'Row 9 Cafe',
-    category: 'Cafe',
-    location: 'Blok M',
-    image: '/Destination/Cafe, Bar, and Eatery/row9.jpg',
-    description: 'Outdoor vibes di Blok M, cocok banget buat sore-sorean sambil nunggu macet kelar',
-  },
-  {
-    id: 11,
-    name: 'Salty Salty PIK',
-    category: 'Cafe',
-    location: 'PIK',
-    image: '/Destination/Cafe, Bar, and Eatery/Salty Salty.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Salty Salty 2.jpg',
-    description: 'Brunch yang instagramable parah tapi rasanya beneran enak, bukan cuma cantik doang',
-  },
-  {
-    id: 12,
-    name: 'Sarang Semut',
-    category: 'Cafe',
-    location: 'Cikini',
-    image: '/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/sarang-semut2.jpg',
-    description: 'Interior gua batu yang literally unik parah, setiap sudut foto lo bakal auto keren',
-  },
-
-  // === BAR ===
-  {
-    id: 13,
-    name: 'The Platform Bar',
-    category: 'Bar',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/The Platform Jakarta.webp',
-    description: 'Cocktail sambil ngeliatin Bundaran HI dari atas? Serius, ini nyata dan lo bisa',
-  },
-  {
-    id: 14,
-    name: 'St. Regis Bar',
-    category: 'Bar',
-    location: 'Kuningan',
-    image: '/Destination/Cafe, Bar, and Eatery/St Regis Jakarta Bar.jpg',
-    description: 'Jazz live, cocktail premium, WiFi kenceng. New York vibe tapi koordinatnya Kuningan',
-  },
-  {
-    id: 15,
-    name: 'Costess Bar',
-    category: 'Bar',
-    location: 'Kuningan',
-    image: '/Destination/Cafe, Bar, and Eatery/Costess Cafe Jakarta.jpg',
-    description: 'View gedung kaca Kuningan dari atas sambil pegang cocktail. Gak ada yang lebih Jakarta dari ini',
-  },
-  {
-    id: 16,
-    name: "Billy's Block",
-    category: 'Bar',
-    location: 'Jakarta',
-    image: "/Destination/Cafe, Bar, and Eatery/Billy's Block.jpeg",
-    hoverImage: "/Destination/Cafe, Bar, and Eatery/Billy's Block 2.jpeg",
-    description: 'Live music, crowd asik, vibes naik terus tiap malam. Weekend lo harus di sini',
-  },
-  {
-    id: 17,
-    name: 'Bossanova',
-    category: 'Bar',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/Bossanova.jpeg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Bossanova 2.jpeg',
-    description: 'Retro yang gak dipaksain, malah bikin lo pengen duduk lama-lama dan gak mau pulang',
-  },
-  {
-    id: 18,
-    name: 'Tsuki at the Alley',
-    category: 'Bar',
-    location: 'Kemang',
-    image: '/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley 2.jpg',
-    description: 'Gang tersembunyi dengan nuansa malam Tokyo. Lo harus nemu sendiri buat ngerasainnya',
-  },
-
-  // === RESTO ===
-  {
-    id: 19,
-    name: 'Waroeng Roekoen',
-    category: 'Resto',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/waroeng roekoen.jpg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/waroeng roekoen 2.jpg',
-    description: 'Masakan rumahan yang bikin lo makan banyak tanpa drama dan tanpa kantong jebol',
-  },
-  {
-    id: 20,
-    name: 'The Cafe Hotel Mulia',
-    category: 'Resto',
-    location: 'Senayan',
-    image: '/Destination/Cafe, Bar, and Eatery/The Cafe Hotel Mulia.jpg',
-    description: 'Fine dining level dewa di jantung Senayan. Kalau mau impress seseorang, ini tempatnya',
-  },
-  {
-    id: 21,
-    name: 'RM. Fariz',
-    category: 'Resto',
-    location: 'Jakarta',
-    image: '/Destination/Cafe, Bar, and Eatery/RM Fariz.jpeg',
-    hoverImage: '/Destination/Cafe, Bar, and Eatery/RM Fariz 2.jpeg',
-    description: 'Cita rasa nusantara yang jujur dan familiar, harga yang gak bikin lo overthinking',
-  },
-
-  // === BUDAYA ===
-  {
-    id: 22,
-    name: 'Chandra Naya',
-    category: 'Budaya',
-    location: 'Glodok',
-    image: '/Destination/Chandra Naya.jpg',
-    hoverImage: '/Destination/Chandra Naya 2.jpg',
-    description: 'Bangunan bersejarah dengan arsitektur Tionghoa yang otentik di jantung Glodok',
-  },
-];
 
 const filters = ['Semua', 'Kopi', 'Cafe', 'Bar', 'Resto', 'Budaya'];
 
@@ -450,7 +237,8 @@ export default function DestinationsPage() {
             }}
           >
             {filteredDestinations.map((destination, index) => (
-              <div
+              <a
+                href={`/destinations/${destination.slug}`}
                 key={destination.id}
                 className="card destination-card reveal"
                 style={{
@@ -460,6 +248,8 @@ export default function DestinationsPage() {
                   transitionDelay: `${(index % 6) * 0.1}s`,
                   overflow: 'hidden',
                   borderRadius: '16px',
+                  textDecoration: 'none',
+                  display: 'block',
                 }}
                 onMouseEnter={() => setHoveredCard(destination.id)}
                 onMouseLeave={() => setHoveredCard(null)}
@@ -677,7 +467,7 @@ export default function DestinationsPage() {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
 
