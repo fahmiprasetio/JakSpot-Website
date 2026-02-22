@@ -8,40 +8,44 @@ import allDestinations from '../data/destinations';
 const Footer = dynamic(() => import('../components/Footer'), { ssr: true });
 
 const filters = ['Semua', 'Kopi', 'Cafe', 'Bar', 'Resto', 'Budaya'];
+const ITEMS_PER_PAGE = 9;
 
 export default function DestinationsPage() {
   const [activeFilter, setActiveFilter] = useState('Semua');
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Reveal animation — re-observe when filter changes so new cards animate in
+  // Reveal animation — re-observe when filter or page changes
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    );
-
-    // Brief delay so React has rendered the new card elements
     const timeout = setTimeout(() => {
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      document.querySelectorAll('.reveal').forEach((el) => {
+        el.classList.add('active');
+      });
     }, 10);
-
-    return () => {
-      clearTimeout(timeout);
-      observer.disconnect();
-    };
-  }, [activeFilter]);
+    return () => clearTimeout(timeout);
+  }, [activeFilter, currentPage]);
 
   const filteredDestinations =
     activeFilter === 'Semua'
       ? allDestinations
       : allDestinations.filter((d) => d.category === activeFilter);
+
+  const totalPages = Math.ceil(filteredDestinations.length / ITEMS_PER_PAGE);
+  const paginatedDestinations = filteredDestinations.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <>
@@ -175,7 +179,7 @@ export default function DestinationsPage() {
             {filters.map((filter) => (
               <button
                 key={filter}
-                onClick={() => setActiveFilter(filter)}
+                onClick={() => handleFilterChange(filter)}
                 style={{
                   padding: '10px 24px',
                   borderRadius: '50px',
@@ -215,7 +219,14 @@ export default function DestinationsPage() {
               <strong style={{ color: 'var(--primary)' }}>
                 {filteredDestinations.length}
               </strong>{' '}
-              destinasi
+              destinasi &nbsp;·&nbsp; Halaman{' '}
+              <strong style={{ color: 'var(--primary)' }}>
+                {currentPage}
+              </strong>{' '}
+              dari{' '}
+              <strong style={{ color: 'var(--primary)' }}>
+                {totalPages || 1}
+              </strong>
             </span>
           </div>
 
@@ -229,7 +240,7 @@ export default function DestinationsPage() {
               margin: '0 auto',
             }}
           >
-            {filteredDestinations.map((destination, index) => (
+            {paginatedDestinations.map((destination, index) => (
               <a
                 href={`/destinations/${destination.slug}`}
                 key={destination.id}
@@ -476,6 +487,96 @@ export default function DestinationsPage() {
               <p style={{ fontSize: '1.1rem' }}>
                 Belum ada destinasi untuk kategori ini.
               </p>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '8px',
+                marginTop: '60px',
+                flexWrap: 'wrap',
+              }}
+            >
+              {/* Prev */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  background: currentPage === 1 ? 'var(--dark-surface-2)' : 'var(--dark-surface-3)',
+                  color: currentPage === 1 ? 'var(--text-muted)' : 'var(--foreground)',
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                  opacity: currentPage === 1 ? 0.4 : 1,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+              </button>
+
+              {/* Page numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                const isActive = page === currentPage;
+                const isNear = Math.abs(page - currentPage) <= 1 || page === 1 || page === totalPages;
+                if (!isNear) {
+                  if (page === currentPage - 2 || page === currentPage + 2) {
+                    return <span key={page} style={{ color: 'var(--text-muted)', padding: '0 4px' }}>…</span>;
+                  }
+                  return null;
+                }
+                return (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: isActive ? 'var(--gradient-1)' : 'var(--dark-surface-2)',
+                      color: isActive ? 'white' : 'var(--text-muted)',
+                      fontWeight: isActive ? 700 : 400,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+
+              {/* Next */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  background: currentPage === totalPages ? 'var(--dark-surface-2)' : 'var(--dark-surface-3)',
+                  color: currentPage === totalPages ? 'var(--text-muted)' : 'var(--foreground)',
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                  opacity: currentPage === totalPages ? 0.4 : 1,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+              </button>
             </div>
           )}
         </section>
