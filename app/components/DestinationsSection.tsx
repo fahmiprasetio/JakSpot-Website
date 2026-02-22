@@ -70,10 +70,215 @@ const destinations: Destination[] = [
   },
 ];
 
+// --------------- Card sub-component ---------------
+interface DestinationCardProps {
+  destination: Destination;
+  index: number;
+}
+
+const DestinationCard = ({ destination, index }: DestinationCardProps) => {
+  const [hovered, setHovered] = useState(false);
+  const [loadCount, setLoadCount] = useState(0);
+  const totalImages = destination.hoverImage ? 2 : 1;
+  const imagesReady = loadCount >= totalImages;
+  const handleLoad = () => setLoadCount((c) => c + 1);
+
+  return (
+    <a
+      href={`/destinations/${destination.slug}`}
+      className="card destination-card reveal"
+      style={{
+        position: "relative",
+        height: "450px",
+        cursor: "pointer",
+        transitionDelay: `${index * 0.1}s`,
+        overflow: "hidden",
+        borderRadius: "16px",
+        textDecoration: "none",
+        display: "block",
+        background: "var(--dark-surface-2)",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Image Wrapper — hidden until both images are loaded */}
+      <div
+        className="media-wrapper"
+        style={{
+          position: "absolute",
+          inset: 0,
+          overflow: "hidden",
+          borderRadius: "16px",
+          opacity: imagesReady ? 1 : 0,
+          transition: "opacity 0.4s ease",
+        }}
+      >
+        {/* Hover Image Layer (Background) */}
+        {destination.hoverImage && (
+          <img
+            src={destination.hoverImage}
+            alt={destination.name}
+            loading="lazy"
+            decoding="async"
+            onLoad={handleLoad}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 1,
+            }}
+          />
+        )}
+
+        {/* Main Image Layer (Foreground with Wipe Animation) */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            transition: "clip-path 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+            clipPath:
+              hovered && destination.hoverImage
+                ? "inset(0 0 0 100%)"
+                : "inset(0 0 0 0%)",
+          }}
+        >
+          <img
+            src={destination.image}
+            alt={destination.name}
+            loading="lazy"
+            decoding="async"
+            onLoad={handleLoad}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+
+        {/* Wipe Line */}
+        {destination.hoverImage && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              width: "3px",
+              background:
+                "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.9) 30%, white 50%, rgba(255,255,255,0.9) 70%, transparent 100%)",
+              boxShadow: "0 0 12px 3px rgba(255,255,255,0.7)",
+              zIndex: 3,
+              pointerEvents: "none",
+              transition:
+                "left 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease",
+              left: hovered ? "calc(100% + 3px)" : "0px",
+              opacity: hovered ? 1 : 0,
+            }}
+          />
+        )}
+
+        {/* Gradient Overlay (Always Visible) */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 80%)",
+            zIndex: 4,
+            pointerEvents: "none",
+          }}
+        />
+      </div>
+
+      {/* Category Badge */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          zIndex: 10,
+          pointerEvents: "none",
+        }}
+      >
+        <span
+          className="glass"
+          style={{
+            padding: "8px 16px",
+            borderRadius: "50px",
+            fontSize: "0.8rem",
+            color: "white",
+          }}
+        >
+          {destination.category}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div
+        className="content-wrapper"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: "30px",
+          zIndex: 10,
+          pointerEvents: "none",
+        }}
+      >
+        <h3
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "1.8rem",
+            fontWeight: "700",
+            marginBottom: "8px",
+            color: "white",
+          }}
+        >
+          {destination.name}
+        </h3>
+        <p style={{ color: "white", fontSize: "0.95rem" }}>
+          {destination.description}
+        </p>
+
+        {/* Explore Button */}
+        <div
+          className="explore-btn"
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            color: "var(--primary)",
+            fontSize: "0.9rem",
+            fontWeight: "600",
+            transition: "all 0.3s ease",
+          }}
+        >
+          <span>Jelajahi</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  );
+};
+// ---------------------------------------------------
+
 const DestinationsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState("Semua");
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const filters = [
     "Semua",
     "Skyline",
@@ -204,198 +409,11 @@ const DestinationsSection = () => {
           }}
         >
           {filteredDestinations.map((destination, index) => (
-            <a
-              href={`/destinations/${destination.slug}`}
+            <DestinationCard
               key={destination.id}
-              className="card destination-card reveal"
-              style={{
-                position: "relative",
-                height: "450px",
-                cursor: "pointer",
-                transitionDelay: `${index * 0.1}s`,
-                overflow: "hidden",
-                borderRadius: "16px",
-                textDecoration: "none",
-                display: "block",
-              }}
-              onMouseEnter={() => setHoveredCard(destination.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              {/* Image Wrapper */}
-              <div
-                className="media-wrapper"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  overflow: "hidden",
-                  borderRadius: "16px",
-                }}
-              >
-                {/* Hover Image Layer (Background) */}
-                {destination.hoverImage && (
-                  <img
-                    src={destination.hoverImage}
-                    alt={destination.name}
-                    loading="lazy"
-                    decoding="async"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      zIndex: 1,
-                    }}
-                  />
-                )}
-
-                {/* Main Image Layer (Foreground with Wipe Animation) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    zIndex: 2,
-                    transition: "clip-path 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-                    clipPath:
-                      hoveredCard === destination.id && destination.hoverImage
-                        ? "inset(0 0 0 100%)"
-                        : "inset(0 0 0 0%)",
-                  }}
-                >
-                  <img
-                    src={destination.image}
-                    alt={destination.name}
-                    loading="lazy"
-                    decoding="async"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-
-                {/* Wipe Line */}
-                {destination.hoverImage && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      bottom: 0,
-                      width: "3px",
-                      background:
-                        "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.9) 30%, white 50%, rgba(255,255,255,0.9) 70%, transparent 100%)",
-                      boxShadow: "0 0 12px 3px rgba(255,255,255,0.7)",
-                      zIndex: 3,
-                      pointerEvents: "none",
-                      transition:
-                        "left 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease",
-                      left:
-                        hoveredCard === destination.id
-                          ? "calc(100% + 3px)"
-                          : "0px",
-                      opacity: hoveredCard === destination.id ? 1 : 0,
-                    }}
-                  />
-                )}
-
-                {/* Gradient Overlay (Always Visible) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 80%)",
-                    zIndex: 4,
-                    pointerEvents: "none",
-                  }}
-                />
-              </div>
-
-              {/* Category Badge */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: "20px",
-                  left: "20px",
-                  zIndex: 10,
-                  pointerEvents: "none",
-                }}
-              >
-                <span
-                  className="glass"
-                  style={{
-                    padding: "8px 16px",
-                    borderRadius: "50px",
-                    fontSize: "0.8rem",
-                    color: "white",
-                  }}
-                >
-                  {destination.category}
-                </span>
-              </div>
-
-              {/* Content */}
-              <div
-                className="content-wrapper"
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: "30px",
-                  zIndex: 10,
-                  pointerEvents: "none",
-                }}
-              >
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.8rem",
-                    fontWeight: "700",
-                    marginBottom: "8px",
-                    color: "white",
-                  }}
-                >
-                  {destination.name}
-                </h3>
-                <p
-                  style={{
-                    color: "white",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  {destination.description}
-                </p>
-
-                {/* Explore Button */}
-                <div
-                  className="explore-btn"
-                  style={{
-                    marginTop: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    color: "var(--primary)",
-                    fontSize: "0.9rem",
-                    fontWeight: "600",
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <span>Jelajahi</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              destination={destination}
+              index={index}
+            />
           ))}
         </div>
 
