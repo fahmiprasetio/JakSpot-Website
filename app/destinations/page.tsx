@@ -47,14 +47,18 @@ export default function DestinationsPage() {
     <>
       <Navbar variant="subpage" />
 
-      <main>
-        {/* ====== HERO SECTION ====== */}
-        <section
+      <main style={{ position: 'relative' }}>
+        {/* ====== HERO — fixed, never moves ====== */}
+        <div
           style={{
-            position: 'relative',
-            height: '55vh',
-            minHeight: '400px',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '68vh',
+            minHeight: '460px',
             overflow: 'hidden',
+            zIndex: 0,
           }}
         >
           {/* Bridge Upscale Background */}
@@ -67,45 +71,45 @@ export default function DestinationsPage() {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: 'center 70%',
+              objectPosition: 'center 125%',
             }}
           />
 
-          {/* Gradient Overlay — dark at bottom, transparent at top */}
+          {/* Gradient Overlay — smooth fade into section 2 colour */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
               background:
-                'linear-gradient(to top, var(--dark-surface) 0%, rgba(10,10,15,0.5) 40%, rgba(10,10,15,0.2) 70%, transparent 100%)',
+                'linear-gradient(to bottom, rgba(18,18,26,0.2) 0%, rgba(18,18,26,0.0) 30%, rgba(18,18,26,0.0) 40%, rgba(18,18,26,0.4) 60%, rgba(18,18,26,0.8) 80%, #12121a 100%)',
             }}
           />
+        </div>
 
-          {/* Hero Content */}
+        {/* Spacer so content starts below the hero (minus overlap) */}
+        <div style={{ height: 'calc(68vh - 160px)', minHeight: '300px' }} />
+
+        {/* ====== DESTINATIONS CONTENT — scrolls over fixed hero ====== */}
+        <section
+          ref={contentRef}
+          style={{
+            background: 'var(--dark-surface)',
+            padding: '60px 5% 100px',
+            position: 'relative',
+            zIndex: 1,
+            borderRadius: '32px 32px 0 0',
+            boxShadow: '0 -32px 80px rgba(18,18,26,1)',
+          }}
+        >
+
+          {/* Hero Text — sits at top of content, above filter tabs */}
           <div
             className="reveal"
             style={{
-              position: 'absolute',
-              bottom: '60px',
-              left: '50%',
-              transform: 'translateX(-50%)',
               textAlign: 'center',
-              zIndex: 2,
-              width: '90%',
-              maxWidth: '600px',
+              marginBottom: '48px',
             }}
           >
-            <span
-              style={{
-                color: 'var(--primary)',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-              }}
-            >
-              Eksplor Jakarta
-            </span>
             <h1
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
@@ -116,7 +120,7 @@ export default function DestinationsPage() {
                 lineHeight: 1.1,
               }}
             >
-              Semua <span className="gradient-text">Destinasi</span>
+              Destinasi yang <span className="gradient-text">Gak Pasaran</span>
             </h1>
             <p
               style={{
@@ -127,21 +131,10 @@ export default function DestinationsPage() {
                 lineHeight: 1.7,
               }}
             >
-              Dari coffee shop tersembunyi sampai rooftop bar paling keren.
-              Semua ada di sini.
+              Dari coffee shop tersembunyi sampe rooftop bar paling keren.
+              Hidden gems Jakarta yang belum lo kenal — yuk eksplor semuanya.
             </p>
           </div>
-        </section>
-
-        {/* ====== DESTINATIONS CONTENT ====== */}
-        <section
-          ref={contentRef}
-          style={{
-            background: 'var(--dark-surface)',
-            padding: '60px 5% 100px',
-            position: 'relative',
-          }}
-        >
           {/* Background Decoration */}
           <div
             style={{
