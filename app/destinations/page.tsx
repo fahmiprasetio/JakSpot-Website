@@ -481,7 +481,7 @@ export default function DestinationsPage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer showNewsletter={false} />
 
       {/* Page-specific responsive styles */}
       <style jsx global>{`

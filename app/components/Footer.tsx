@@ -2,7 +2,11 @@
 
 import { useEffect, useRef } from 'react';
 
-const Footer = () => {
+interface FooterProps {
+  showNewsletter?: boolean;
+}
+
+const Footer = ({ showNewsletter = true }: FooterProps) => {
     const footerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -60,6 +64,7 @@ const Footer = () => {
             }} />
 
             {/* Newsletter Section */}
+            {showNewsletter && (
             <div className="reveal" style={{
                 background: 'var(--dark-surface-2)',
                 padding: '80px 5%'
@@ -116,6 +121,7 @@ const Footer = () => {
                     </form>
                 </div>
             </div>
+            )}
 
             {/* Main Footer */}
             <div style={{

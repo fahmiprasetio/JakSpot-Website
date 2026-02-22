@@ -833,7 +833,7 @@ export default function DestinationDetailPage() {
         )}
       </main>
 
-      <Footer />
+      <Footer showNewsletter={false} />
 
       {/* Responsive */}
       <style jsx global>{`

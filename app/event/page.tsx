@@ -640,7 +640,7 @@ export default function EventPage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer showNewsletter={false} />
 
       {/* Page-specific responsive styles */}
       <style jsx global>{`

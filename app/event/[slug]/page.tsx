@@ -1015,7 +1015,7 @@ export default function EventDetailPage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer showNewsletter={false} />
 
       {/* Share toast */}
       {showShareToast && (
