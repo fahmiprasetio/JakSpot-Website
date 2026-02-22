@@ -132,7 +132,7 @@ export default function EventPage() {
           <div
             style={{
               position: 'absolute',
-              bottom: '80px',
+              bottom: '30px',
               left: '5%',
               right: '5%',
               zIndex: 3,
@@ -143,7 +143,7 @@ export default function EventPage() {
               <span
                 style={{
                   color: 'var(--accent)',
-                  fontSize: '0.85rem',
+                  fontSize: '0.75rem',
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   letterSpacing: '0.15em',
@@ -154,10 +154,10 @@ export default function EventPage() {
               <h1
                 style={{
                   fontFamily: "'Space Grotesk', sans-serif",
-                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                  fontSize: 'clamp(2rem, 4vw, 3rem)',
                   fontWeight: 700,
                   color: 'var(--foreground)',
-                  marginTop: '12px',
+                  marginTop: '8px',
                   lineHeight: 1.1,
                 }}
               >
@@ -167,10 +167,10 @@ export default function EventPage() {
               <p
                 style={{
                   color: 'rgba(255,255,255,0.75)',
-                  fontSize: 'clamp(0.95rem, 1.2vw, 1.1rem)',
+                  fontSize: 'clamp(0.85rem, 1vw, 0.95rem)',
                   maxWidth: '550px',
-                  marginTop: '16px',
-                  lineHeight: 1.7,
+                  marginTop: '12px',
+                  lineHeight: 1.6,
                 }}
               >
                 Jakarta gak pernah sepi. Dari konser yang bikin merinding sampai festival yang bikin kantong jebol — 
@@ -186,12 +186,12 @@ export default function EventPage() {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '16px',
-                  marginTop: '32px',
-                  padding: '14px 24px 14px 14px',
+                  gap: '12px',
+                  marginTop: '20px',
+                  padding: '10px 16px 10px 10px',
                   background: 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(10px)',
-                  borderRadius: '16px',
+                  borderRadius: '12px',
                   border: '1px solid rgba(255,255,255,0.12)',
                   textDecoration: 'none',
                   transition: 'all 0.3s ease',
@@ -208,9 +208,9 @@ export default function EventPage() {
               >
                 <div
                   style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '12px',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '8px',
                     overflow: 'hidden',
                     flexShrink: 0,
                   }}
@@ -222,14 +222,14 @@ export default function EventPage() {
                   />
                 </div>
                 <div>
-                  <div style={{ color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div style={{ color: 'var(--primary)', fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     Featured — {currentFeatured.date}
                   </div>
-                  <div style={{ color: 'white', fontSize: '0.95rem', fontWeight: 600 }}>
+                  <div style={{ color: 'white', fontSize: '0.85rem', fontWeight: 600 }}>
                     {currentFeatured.title}
                   </div>
                 </div>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" style={{ marginLeft: '8px', flexShrink: 0 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" style={{ marginLeft: '4px', flexShrink: 0 }}>
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </a>
