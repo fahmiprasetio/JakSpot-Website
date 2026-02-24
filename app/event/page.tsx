@@ -9,6 +9,7 @@ import type { EventDetail } from '../data/events';
 const Footer = dynamic(() => import('../components/Footer'), { ssr: true });
 
 const categories = ['Semua', 'Festival', 'Musik', 'Seni', 'Budaya', 'Food & Drink', 'Olahraga', 'Komunitas'];
+const ITEMS_PER_PAGE = 6;
 
 // Month labels for timeline
 const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -16,6 +17,7 @@ const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Se
 export default function EventPage() {
   const [activeFilter, setActiveFilter] = useState('Semua');
   const [viewMode, setViewMode] = useState<'grid' | 'timeline'>('grid');
+  const [currentPage, setCurrentPage] = useState(1);
   const contentRef = useRef<HTMLDivElement>(null);
   const [featuredIndex, setFeaturedIndex] = useState(0);
 
@@ -57,6 +59,22 @@ export default function EventPage() {
     activeFilter === 'Semua'
       ? allEvents
       : allEvents.filter((e) => e.category === activeFilter);
+
+  const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // Sort by date for timeline
   const sortedEvents = [...filteredEvents].sort((a, b) =>
@@ -317,7 +335,7 @@ export default function EventPage() {
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActiveFilter(cat)}
+                  onClick={() => handleFilterChange(cat)}
                   style={{
                     padding: '10px 22px',
                     borderRadius: '50px',
@@ -406,7 +424,14 @@ export default function EventPage() {
               <strong style={{ color: 'var(--primary)' }}>
                 {filteredEvents.length}
               </strong>{' '}
-              event
+              event &nbsp;·&nbsp; Halaman{' '}
+              <strong style={{ color: 'var(--primary)' }}>
+                {currentPage}
+              </strong>{' '}
+              dari{' '}
+              <strong style={{ color: 'var(--primary)' }}>
+                {totalPages || 1}
+              </strong>
             </span>
           </div>
 
@@ -421,9 +446,99 @@ export default function EventPage() {
                 margin: '0 auto',
               }}
             >
-              {filteredEvents.map((event, index) => (
+              {paginatedEvents.map((event, index) => (
                 <EventCard key={event.id} event={event} index={index} />
               ))}
+            </div>
+          )}
+
+          {/* ====== GRID PAGINATION ====== */}
+          {viewMode === 'grid' && totalPages > 1 && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '8px',
+                marginTop: '60px',
+                flexWrap: 'wrap',
+              }}
+            >
+              {/* Prev */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  background: currentPage === 1 ? 'var(--dark-surface-2)' : 'var(--dark-surface-3)',
+                  color: currentPage === 1 ? 'var(--text-muted)' : 'var(--foreground)',
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                  opacity: currentPage === 1 ? 0.4 : 1,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+              </button>
+
+              {/* Page numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                const isActive = page === currentPage;
+                const isNear = Math.abs(page - currentPage) <= 1 || page === 1 || page === totalPages;
+                if (!isNear) {
+                  if (page === currentPage - 2 || page === currentPage + 2) {
+                    return <span key={page} style={{ color: 'var(--text-muted)', padding: '0 4px' }}>…</span>;
+                  }
+                  return null;
+                }
+                return (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: isActive ? 'var(--gradient-1)' : 'var(--dark-surface-2)',
+                      color: isActive ? 'white' : 'var(--text-muted)',
+                      fontWeight: isActive ? 700 : 400,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+
+              {/* Next */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  background: currentPage === totalPages ? 'var(--dark-surface-2)' : 'var(--dark-surface-3)',
+                  color: currentPage === totalPages ? 'var(--text-muted)' : 'var(--foreground)',
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                  opacity: currentPage === totalPages ? 0.4 : 1,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+              </button>
             </div>
           )}
 
