@@ -48,7 +48,7 @@ const events: EventItem[] = [
         date: 'Agustus 2026',
         location: 'Jakarta Convention Center',
         description: 'Pameran seni kontemporer terbesar se-Indonesia. Foto aesthetic dijamin, tapi lo bakal genuinely terkesima juga.',
-        image: 'https://images.unsplash.com/photo-1561839561-b13bcfe95249?auto=format&fit=crop&w=1920&q=80',
+        image: 'https://images.unsplash.com/photo-1577720643272-265f434e5f4e?auto=format&fit=crop&w=1920&q=80',
     },
     {
         id: 5,
