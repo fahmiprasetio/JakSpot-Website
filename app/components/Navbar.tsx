@@ -89,11 +89,13 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
     { name: 'Beranda', href: '#hero' },
     { name: 'Destinasi', href: '/destinations' },
     { name: 'Event', href: '/event' },
+    { name: 'Tentang', href: '/about' },
     { name: 'Kontak', href: '#contact' },
   ] : [
     { name: 'Beranda', href: '/' },
     { name: 'Destinasi', href: '/destinations' },
     { name: 'Event', href: '/event' },
+    { name: 'Tentang', href: '/about' },
     { name: 'Kontak', href: '/#contact' },
   ];
 

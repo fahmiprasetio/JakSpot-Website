@@ -36,7 +36,7 @@ const Footer = ({ showNewsletter = true }: FooterProps) => {
             { name: 'Transportasi', href: '#' }
         ],
         info: [
-            { name: 'Tentang Kami', href: '#' },
+            { name: 'Tentang Kami', href: '/about' },
             { name: 'Kontak', href: '#contact' },
             { name: 'FAQ', href: '#' },
             { name: 'Kebijakan Privasi', href: '#' },
