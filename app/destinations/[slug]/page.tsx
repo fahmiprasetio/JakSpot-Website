@@ -45,6 +45,14 @@ export default function DestinationDetailPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Fallback timeout for map loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMapLoaded(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   if (!destination) {
     return (
       <>
@@ -493,13 +501,16 @@ export default function DestinationDetailPage() {
                   )}
                   <iframe
                     title={`Peta ${destination.name}`}
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${destination.coords.lng - 0.005}%2C${destination.coords.lat - 0.003}%2C${destination.coords.lng + 0.005}%2C${destination.coords.lat + 0.003}&layer=mapnik&marker=${destination.coords.lat}%2C${destination.coords.lng}`}
+                    src={`https://maps.google.com/maps?q=${destination.coords.lat},${destination.coords.lng}&z=16&output=embed`}
                     style={{
                       width: "100%",
                       height: "100%",
                       border: "none",
                       position: "relative",
                       zIndex: 2,
+                      filter: "brightness(0.85) contrast(1.1) invert(0.92) hue-rotate(180deg)",
+                      opacity: mapLoaded ? 1 : 0,
+                      transition: "opacity 0.4s ease",
                     }}
                     loading="lazy"
                     onLoad={() => setMapLoaded(true)}

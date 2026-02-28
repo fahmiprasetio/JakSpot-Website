@@ -45,6 +45,14 @@ export default function EventDetailPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Fallback timeout for map loading — onLoad may not fire on cross-origin iframes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMapLoaded(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   if (!event) {
     return (
       <>
@@ -648,12 +656,12 @@ export default function EventDetailPage() {
                   )}
                   <iframe
                     title="Event Location"
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${event.coords.lng - 0.008}%2C${event.coords.lat - 0.005}%2C${event.coords.lng + 0.008}%2C${event.coords.lat + 0.005}&layer=mapnik&marker=${event.coords.lat}%2C${event.coords.lng}`}
+                    src={`https://maps.google.com/maps?q=${event.coords.lat},${event.coords.lng}&z=16&output=embed`}
                     style={{
                       width: '100%',
                       height: '100%',
                       border: 'none',
-                      filter: 'invert(0.9) hue-rotate(180deg) brightness(1.2) contrast(1.1)',
+                      filter: 'brightness(0.85) contrast(1.1) invert(0.92) hue-rotate(180deg)',
                       opacity: mapLoaded ? 1 : 0,
                       transition: 'opacity 0.4s ease',
                     }}
