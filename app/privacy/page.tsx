@@ -143,6 +143,9 @@ export default function PrivacyPage() {
               Data lo penting, dan kita serius nge-handle itu. Baca ini biar lo tau gimana kita jaga privasi lo.
             </p>
           </div>
+
+          {/* Gradient fade to content */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '150px', background: 'linear-gradient(to bottom, transparent 0%, var(--background) 100%)', pointerEvents: 'none', zIndex: 3 }} />
         </section>
 
         {/* ═══════ CONTENT ═══════ */}

@@ -169,6 +169,9 @@ export default function TermsPage() {
               Sebelum lo explore lebih jauh, baca dulu aturan mainnya. Tenang, gak ribet kok — kita jelasin pake bahasa manusia.
             </p>
           </div>
+
+          {/* Gradient fade to content */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '150px', background: 'linear-gradient(to bottom, transparent 0%, var(--background) 100%)', pointerEvents: 'none', zIndex: 3 }} />
         </section>
 
         {/* ═══════ CONTENT ═══════ */}

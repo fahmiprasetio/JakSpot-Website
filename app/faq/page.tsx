@@ -183,6 +183,9 @@ export default function FAQPage() {
               Sebelum lo tanya-tanya, coba cek dulu di sini — siapa tau jawabannya udah ada. Kalau belum ketemu, gas aja hubungi kita!
             </p>
           </div>
+
+          {/* Gradient fade to content */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '150px', background: 'linear-gradient(to bottom, transparent 0%, var(--background) 100%)', pointerEvents: 'none', zIndex: 3 }} />
         </section>
 
         {/* ═══════ FAQ CONTENT ═══════ */}
