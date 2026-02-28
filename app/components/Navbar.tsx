@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) => {
   const isHomepage = variant === 'homepage';
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
   const heroLogoRef = useRef<HTMLDivElement>(null);
   const navLogoRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorGroupRef = useRef<HTMLDivElement>(null);
@@ -250,7 +252,38 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
             </div>
           </a>
 
-          {/* Hamburger Button */}
+          {/* Auth + Hamburger */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', zIndex: 1001 }}>
+            {user ? (
+              <a
+                href="/profile"
+                style={{
+                  width: '34px', height: '34px', borderRadius: '10px',
+                  background: 'var(--gradient-1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 700, fontSize: '0.8rem', color: 'white',
+                  textDecoration: 'none', transition: 'transform 0.3s',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                {user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+              </a>
+            ) : (
+              <a
+                href="/signin"
+                style={{
+                  padding: '8px 18px', borderRadius: '10px',
+                  background: 'rgba(255,107,53,0.1)', border: '1px solid rgba(255,107,53,0.2)',
+                  color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 600,
+                  textDecoration: 'none', transition: 'all 0.3s', whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--primary)'; e.currentTarget.style.color = 'white'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,107,53,0.1)'; e.currentTarget.style.color = 'var(--primary)'; }}
+              >
+                Login
+              </a>
+            )}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
@@ -295,6 +328,7 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
               borderRadius: '2px',
             }} />
           </button>
+          </div>
         </nav>
       </div>
 
@@ -363,6 +397,37 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
             />
           </a>
         ))}
+
+        {/* Auth link in menu */}
+        <div style={{
+          marginTop: '24px',
+          paddingTop: '24px',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          opacity: menuOpen ? 1 : 0,
+          transform: menuOpen ? 'translateY(0)' : 'translateY(30px)',
+          transition: `all 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${navLinks.length * 0.08 + 0.15}s`,
+        }}>
+          {user ? (
+            <a href="/profile" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'var(--foreground)' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--gradient-1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
+                {user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600 }}>{user.name}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Lihat Profil</div>
+              </div>
+            </a>
+          ) : (
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <a href="/signin" onClick={() => setMenuOpen(false)} className="btn-primary" style={{ textDecoration: 'none', padding: '12px 28px', fontSize: '0.9rem' }}>
+                Login
+              </a>
+              <a href="/signup" onClick={() => setMenuOpen(false)} style={{ padding: '12px 28px', borderRadius: '12px', background: 'var(--dark-surface-3)', color: 'var(--foreground)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block' }}>
+                Daftar
+              </a>
+            </div>
+          )}
+        </div>
 
         <div style={{
           position: 'absolute',

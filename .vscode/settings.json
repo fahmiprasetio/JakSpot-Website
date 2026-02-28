@@ -1,0 +1,8 @@
+{
+  "chat.tools.terminal.autoApprove": {
+    "/^cd \"D:\\\\Projek Website & Mobile App\\\\jakspot\" ; node -e \"const \\{createClient\\} = require\\('@libsql/client'\\); const c = createClient\\(\\{url:'file:dev\\.db'\\}\\); c\\.execute\\('SELECT \\* FROM User LIMIT 1'\\)\\.then\\(d=>console\\.log\\('Works:', JSON\\.stringify\\(d\\.rows\\)\\)\\)\\.catch\\(e=>console\\.error\\('ERR:', e\\.message\\)\\)\"$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
+}
