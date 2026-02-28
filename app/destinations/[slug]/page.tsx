@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Navbar from "../../components/Navbar";
 import destinations, { getDestinationBySlug } from "../../data/destinations";
 import type { DestinationDetail } from "../../data/destinations";
+import { useFavorites } from "../../context/FavoritesContext";
 
 const Footer = dynamic(() => import("../../components/Footer"), { ssr: true });
 
@@ -18,6 +19,8 @@ export default function DestinationDetailPage() {
   const [activeImage, setActiveImage] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = destination ? isFavorite(destination.slug) : false;
 
   // Scroll reveal
   useEffect(() => {
@@ -187,6 +190,43 @@ export default function DestinationDetailPage() {
             </svg>
             Semua Destinasi
           </a>
+
+          {/* Favorite button */}
+          <button
+            onClick={() => toggleFavorite(destination.slug)}
+            className="reveal"
+            style={{
+              position: "absolute",
+              top: "90px",
+              right: "clamp(20px, 5vw, 60px)",
+              zIndex: 10,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              color: "white",
+              fontSize: "0.9rem",
+              fontWeight: 500,
+              padding: "10px 18px",
+              borderRadius: "50px",
+              background: favorited ? "rgba(255,59,48,0.7)" : "rgba(0,0,0,0.35)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              if (!favorited) e.currentTarget.style.background = "rgba(255,59,48,0.4)";
+            }}
+            onMouseLeave={(e) => {
+              if (!favorited) e.currentTarget.style.background = "rgba(0,0,0,0.35)";
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill={favorited ? "white" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            {favorited ? "Favorit" : "Simpan"}
+          </button>
 
           {/* Hero title overlay */}
           <div

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 export const metadata: Metadata = {
   title: "JakSpot - Jelajahi Pesona Jakarta",
@@ -35,7 +36,9 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          {children}
+          <FavoritesProvider>
+            {children}
+          </FavoritesProvider>
         </AuthProvider>
       </body>
     </html>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Navbar from "../components/Navbar";
 import allDestinations from "../data/destinations";
+import { useFavorites } from "../context/FavoritesContext";
 
 const Footer = dynamic(() => import("../components/Footer"), { ssr: true });
 
@@ -19,6 +20,8 @@ interface DestinationCardProps {
 function DestinationCard({ destination, index }: DestinationCardProps) {
   const [hovered, setHovered] = useState(false);
   const [loadCount, setLoadCount] = useState(0);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(destination.slug);
   const totalImages = destination.hoverImage ? 2 : 1;
   const imagesReady = loadCount >= totalImages;
   const handleLoad = () => setLoadCount((c) => c + 1);
@@ -155,6 +158,47 @@ function DestinationCard({ destination, index }: DestinationCardProps) {
           {destination.category}
         </span>
       </div>
+
+      {/* Favorite Button */}
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleFavorite(destination.slug);
+        }}
+        style={{
+          position: "absolute",
+          top: "60px",
+          right: "20px",
+          zIndex: 12,
+          width: "38px",
+          height: "38px",
+          borderRadius: "50%",
+          background: favorited ? "rgba(255,59,48,0.9)" : "rgba(0,0,0,0.35)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          transition: "all 0.3s ease",
+          padding: 0,
+        }}
+        onMouseEnter={(e) => {
+          if (!favorited) e.currentTarget.style.background = "rgba(255,59,48,0.5)";
+          e.currentTarget.style.transform = "scale(1.15)";
+        }}
+        onMouseLeave={(e) => {
+          if (!favorited) e.currentTarget.style.background = "rgba(0,0,0,0.35)";
+          e.currentTarget.style.transform = "scale(1)";
+        }}
+        aria-label={favorited ? "Hapus dari favorit" : "Tambah ke favorit"}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill={favorited ? "white" : "none"} stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+      </button>
 
       {/* Location Badge */}
       <div

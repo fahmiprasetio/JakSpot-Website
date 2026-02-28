@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import { useFavorites } from '../context/FavoritesContext';
+import allDestinations from '../data/destinations';
 
 const Footer = dynamic(() => import('../components/Footer'), { ssr: true });
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, loading: authLoading, logout, updateProfile } = useAuth();
+  const { favorites, toggleFavorite } = useFavorites();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
@@ -95,6 +98,8 @@ export default function ProfilePage() {
     ? new Date(user.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
     : '-';
 
+  const favoriteDestinations = allDestinations.filter((d) => favorites.includes(d.slug));
+
   return (
     <>
       <Navbar variant="subpage" />
@@ -142,7 +147,7 @@ export default function ProfilePage() {
         </section>
 
         {/* ═══════ PROFILE CONTENT ═══════ */}
-        <section style={{ padding: '0 5% 100px', maxWidth: '700px', margin: '0 auto' }}>
+        <section style={{ padding: '0 5% 100px', maxWidth: '900px', margin: '0 auto' }}>
           {/* Success/Error Messages */}
           {message && (
             <div className="reveal" style={{ padding: '14px 20px', borderRadius: '14px', background: 'rgba(52,199,89,0.1)', border: '1px solid rgba(52,199,89,0.2)', color: '#34c759', fontSize: '0.9rem', marginBottom: '24px', textAlign: 'center' }}>
@@ -255,7 +260,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Logout Button */}
-          <div className="reveal" style={{ textAlign: 'center' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: '60px' }}>
             <button
               onClick={handleLogout}
               style={{
@@ -275,6 +280,95 @@ export default function ProfilePage() {
               </svg>
               Logout
             </button>
+          </div>
+
+          {/* ═══════ FAVORITES SECTION ═══════ */}
+          <div className="reveal" style={{ marginTop: '0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 700 }}>
+                Destinasi Favorit
+              </h2>
+              <span style={{ background: 'rgba(255,107,53,0.15)', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, padding: '4px 12px', borderRadius: '50px' }}>
+                {favoriteDestinations.length}
+              </span>
+            </div>
+
+            {favoriteDestinations.length === 0 ? (
+              <div style={{
+                background: 'var(--dark-surface-2)', borderRadius: '24px', padding: '60px 32px',
+                border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center',
+              }}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 16px', display: 'block' }}>
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '20px' }}>
+                  Belum ada destinasi favorit. Explore dan simpan tempat yang lo suka!
+                </p>
+                <a href="/destinations" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  padding: '12px 24px', borderRadius: '12px',
+                  background: 'rgba(255,107,53,0.1)', border: '1px solid rgba(255,107,53,0.2)',
+                  color: 'var(--primary)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600,
+                  transition: 'all 0.3s',
+                }}>
+                  Jelajahi Destinasi
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </a>
+              </div>
+            ) : (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                gap: '20px',
+              }}>
+                {favoriteDestinations.map((dest) => (
+                  <div key={dest.slug} style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', background: 'var(--dark-surface-2)', border: '1px solid rgba(255,255,255,0.05)', transition: 'transform 0.3s, box-shadow 0.3s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.3)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  >
+                    <a href={`/destinations/${dest.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                      <div style={{ position: 'relative', height: '180px', overflow: 'hidden' }}>
+                        <img src={dest.image} alt={dest.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)', pointerEvents: 'none' }} />
+                        <span style={{ position: 'absolute', bottom: '12px', left: '12px', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', padding: '4px 12px', borderRadius: '50px', fontSize: '0.75rem', color: 'rgba(255,255,255,0.8)' }}>
+                          {dest.category}
+                        </span>
+                      </div>
+                      <div style={{ padding: '16px' }}>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 700, marginBottom: '6px', color: 'var(--foreground)' }}>
+                          {dest.name}
+                        </h3>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                          {dest.location}
+                        </div>
+                      </div>
+                    </a>
+                    {/* Remove favorite button */}
+                    <button
+                      onClick={() => toggleFavorite(dest.slug)}
+                      style={{
+                        position: 'absolute', top: '12px', right: '12px', zIndex: 5,
+                        width: '34px', height: '34px', borderRadius: '50%',
+                        background: 'rgba(255,59,48,0.9)', border: 'none',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', transition: 'all 0.3s',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.15)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                      aria-label="Hapus dari favorit"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>
