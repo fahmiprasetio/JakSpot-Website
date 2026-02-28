@@ -274,12 +274,12 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
                 href="/signin"
                 style={{
                   padding: '8px 18px', borderRadius: '10px',
-                  background: 'rgba(255,107,53,0.1)', border: '1px solid rgba(255,107,53,0.2)',
-                  color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 600,
+                  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                  color: 'white', fontSize: '0.8rem', fontWeight: 600,
                   textDecoration: 'none', transition: 'all 0.3s', whiteSpace: 'nowrap',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--primary)'; e.currentTarget.style.color = 'white'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,107,53,0.1)'; e.currentTarget.style.color = 'var(--primary)'; }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
               >
                 Login
               </a>
@@ -419,10 +419,10 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
             </a>
           ) : (
             <div style={{ display: 'flex', gap: '12px' }}>
-              <a href="/signin" onClick={() => setMenuOpen(false)} className="btn-primary" style={{ textDecoration: 'none', padding: '12px 28px', fontSize: '0.9rem' }}>
+              <a href="/signin" onClick={() => setMenuOpen(false)} style={{ padding: '12px 28px', borderRadius: '12px', background: 'white', color: '#0a0a0f', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block' }}>
                 Login
               </a>
-              <a href="/signup" onClick={() => setMenuOpen(false)} style={{ padding: '12px 28px', borderRadius: '12px', background: 'var(--dark-surface-3)', color: 'var(--foreground)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block' }}>
+              <a href="/signup" onClick={() => setMenuOpen(false)} style={{ padding: '12px 28px', borderRadius: '12px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block' }}>
                 Daftar
               </a>
             </div>
@@ -447,5 +447,6 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
     </>
   );
 };
+
 
 export default Navbar;
