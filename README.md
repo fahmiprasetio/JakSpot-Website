@@ -20,23 +20,6 @@
 
 ---
 
-## ✨ Fitur Unggulan
-
-| Fitur | Deskripsi |
-|---|---|
-| 🏙️ **Destinasi Jakarta** | 22+ hidden gems dengan detail lengkap, galeri foto, peta, dan tips |
-| 🎉 **Event Lokal** | 14+ event Jakarta dengan info tanggal, lokasi, dan kategori |
-| 🔐 **Auth System** | Register & login dengan JWT + bcrypt, httpOnly cookies |
-| 👤 **Role-Based Access** | Mode **User** (explore, favorit, review) & **Administrator** (kelola konten) |
-| ❤️ **Favorit** | Simpan destinasi favorit — tersimpan di localStorage per user |
-| ⭐ **Review System** | Tulis, edit, dan hapus review dengan rating bintang 1–5 |
-| 🎛️ **Admin Dashboard** | Tambah & hapus destinasi/event langsung dari UI |
-| 🎬 **Hero Cinematic** | Image sequence animation di hero section |
-| ✨ **Hover Effect** | Wipe transition antar foto di setiap card destinasi |
-| 📱 **Responsive** | Desain adaptif untuk semua ukuran layar |
-
----
-
 ## 🖥️ Preview
 
 ### Halaman Utama
@@ -110,95 +93,11 @@ Buka [http://localhost:3000](http://localhost:3000) di browser.
 
 ---
 
-## 📁 Struktur Project
-
-```
-jakspot/
-├── app/
-│   ├── page.tsx                        # Homepage
-│   ├── layout.tsx                      # Root layout + providers
-│   ├── globals.css                     # CSS variables & global styles
-│   ├── components/                     # Reusable UI components
-│   │   ├── Navbar.tsx
-│   │   ├── HeroSection.tsx
-│   │   ├── DestinationsSection.tsx
-│   │   ├── CulinarySection.tsx
-│   │   ├── CultureSection.tsx
-│   │   ├── EventSection.tsx
-│   │   ├── Footer.tsx
-│   │   ├── LoadingScreen.tsx
-│   │   └── ParallaxBridge.tsx
-│   ├── context/
-│   │   ├── AuthContext.tsx             # Auth state + login/signup/logout
-│   │   └── FavoritesContext.tsx        # Favorites (localStorage)
-│   ├── data/
-│   │   ├── destinations.ts             # 22+ data destinasi
-│   │   └── events.ts                   # 14+ data event
-│   ├── destinations/
-│   │   ├── page.tsx                    # Daftar destinasi + filter
-│   │   └── [slug]/
-│   │       ├── page.tsx                # Detail destinasi + reviews
-│   │       └── reviews/page.tsx        # Semua review destinasi
-│   ├── event/
-│   │   ├── page.tsx                    # Daftar event
-│   │   └── [slug]/page.tsx             # Detail event
-│   ├── admin/page.tsx                  # Dashboard admin
-│   ├── profile/page.tsx                # Halaman profil user
-│   ├── signin/page.tsx                 # Login + role selector
-│   ├── signup/page.tsx                 # Register + role selector
-│   ├── about/ | faq/ | privacy/ | terms/
-│   └── api/
-│       ├── auth/signin | signup | me | signout
-│       ├── reviews/route.ts            # CRUD reviews
-│       └── admin/data/route.ts         # Admin manage konten
-├── lib/
-│   ├── auth.ts                         # JWT + bcrypt utilities
-│   └── prisma.ts                       # DB client + auto-migration
-└── public/
-    ├── Destination/                    # Foto destinasi
-    └── image-sequences-hero-section/   # Frame animasi hero
-```
-
----
-
-## 🔑 Environment Variables
+##  Environment Variables
 
 | Variable | Deskripsi | Wajib |
 |---|---|---|
 | `JWT_SECRET` | Secret key untuk signing JWT token | ✅ |
-
----
-
-## 👥 Role System
-
-### 👤 User
-- Melihat semua destinasi & event
-- Menyimpan destinasi ke favorit
-- Menulis, mengedit, dan menghapus review sendiri
-- Halaman profil dengan tab favorit
-
-### 🔧 Administrator
-- Semua akses user
-- Menambah destinasi & event baru via dashboard `/admin`
-- Menghapus destinasi & event
-
----
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Deskripsi | Auth |
-|---|---|---|---|
-| `POST` | `/api/auth/signup` | Daftar akun baru | — |
-| `POST` | `/api/auth/signin` | Login | — |
-| `GET` | `/api/auth/me` | Info user aktif | Cookie |
-| `POST` | `/api/auth/signout` | Logout | Cookie |
-| `GET` | `/api/reviews?slug=xxx` | Ambil review destinasi | — |
-| `POST` | `/api/reviews` | Kirim review baru | User |
-| `PUT` | `/api/reviews` | Edit review | Owner |
-| `DELETE` | `/api/reviews?id=xxx` | Hapus review | Owner/Admin |
-| `GET` | `/api/admin/data?type=...` | Ambil data destinasi/event | Admin |
-| `POST` | `/api/admin/data` | Tambah destinasi/event | Admin |
-| `DELETE` | `/api/admin/data?type=...&slug=xxx` | Hapus destinasi/event | Admin |
 
 ---
 
