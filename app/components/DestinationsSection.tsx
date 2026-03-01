@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useFavorites } from "../context/FavoritesContext";
 
 interface Destination {
   id: number;
@@ -82,6 +83,8 @@ const DestinationCard = ({ destination, index }: DestinationCardProps) => {
   const totalImages = destination.hoverImage ? 2 : 1;
   const imagesReady = loadCount >= totalImages;
   const handleLoad = () => setLoadCount((c) => c + 1);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(destination.slug);
 
   return (
     <a
@@ -226,7 +229,6 @@ const DestinationCard = ({ destination, index }: DestinationCardProps) => {
           right: 0,
           padding: "30px",
           zIndex: 10,
-          pointerEvents: "none",
         }}
       >
         <h3
@@ -244,31 +246,76 @@ const DestinationCard = ({ destination, index }: DestinationCardProps) => {
           {destination.description}
         </p>
 
-        {/* Explore Button */}
+        {/* Explore + Favorite row */}
         <div
-          className="explore-btn"
           style={{
             marginTop: "20px",
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            color: "var(--primary)",
-            fontSize: "0.9rem",
-            fontWeight: "600",
-            transition: "all 0.3s ease",
+            justifyContent: "space-between",
+            pointerEvents: "auto",
           }}
         >
-          <span>Jelajahi</span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleFavorite(destination.slug);
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              background: favorited ? "rgba(255,59,48,0.85)" : "rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "50px",
+              padding: "8px 16px",
+              color: "white",
+              fontSize: "0.8rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              if (!favorited) e.currentTarget.style.background = "rgba(255,59,48,0.5)";
+              e.currentTarget.style.transform = "scale(1.08)";
+            }}
+            onMouseLeave={(e) => {
+              if (!favorited) e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+            aria-label={favorited ? "Hapus dari favorit" : "Tambah ke favorit"}
           >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill={favorited ? "white" : "none"} stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            {favorited ? 'Favorit' : 'Simpan'}
+          </button>
+
+          <div
+            className="explore-btn"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              color: "var(--primary)",
+              fontSize: "0.9rem",
+              fontWeight: "600",
+              transition: "all 0.3s ease",
+            }}
+          >
+            <span>Jelajahi</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
       </div>
     </a>
