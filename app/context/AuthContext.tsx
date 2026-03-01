@@ -8,14 +8,15 @@ interface User {
   email: string;
   bio?: string | null;
   avatar?: string | null;
+  role?: string;
   createdAt?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string, role?: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (name: string, email: string, password: string, role?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateProfile: (data: { name?: string; bio?: string; avatar?: string; password?: string }) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
@@ -43,12 +44,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshUser();
   }, [refreshUser]);
 
-  const signup = async (name: string, email: string, password: string) => {
+  const signup = async (name: string, email: string, password: string, role?: string) => {
     try {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, role: role || 'user' }),
       });
       const data = await res.json();
       if (!res.ok) return { success: false, error: data.error };
@@ -59,12 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, role?: string) => {
     try {
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, role: role || 'user' }),
       });
       const data = await res.json();
       if (!res.ok) return { success: false, error: data.error };

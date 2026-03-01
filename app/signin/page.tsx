@@ -13,9 +13,10 @@ export default function SignInPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loginRole, setLoginRole] = useState<'user' | 'admin'>('user');
 
   useEffect(() => {
-    if (user) router.push('/profile');
+    if (user) router.push(user.role === 'admin' ? '/admin' : '/profile');
   }, [user, router]);
 
   useEffect(() => {
@@ -32,11 +33,11 @@ export default function SignInPage() {
     setError('');
     setLoading(true);
 
-    const result = await login(email, password);
+    const result = await login(email, password, loginRole);
     setLoading(false);
 
     if (result.success) {
-      router.push('/profile');
+      router.push(loginRole === 'admin' ? '/admin' : '/profile');
     } else {
       setError(result.error || 'Gagal login. Coba lagi.');
     }
@@ -63,6 +64,26 @@ export default function SignInPage() {
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
               Login dulu baru bisa explore lebih jauh.
             </p>
+          </div>
+
+          {/* Role Selector */}
+          <div style={{ display: 'flex', gap: '4px', marginBottom: '24px', background: 'var(--dark-surface-2)', borderRadius: '14px', padding: '4px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            {([{ key: 'user', label: '👤 User', desc: 'Explore & review' }, { key: 'admin', label: '🔧 Admin', desc: 'Kelola konten' }] as const).map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setLoginRole(opt.key)}
+                style={{
+                  flex: 1, padding: '14px 16px', borderRadius: '11px', border: 'none', cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  background: loginRole === opt.key ? (opt.key === 'admin' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'var(--gradient-1)') : 'transparent',
+                  color: loginRole === opt.key ? 'white' : 'var(--text-muted)',
+                  textAlign: 'center',
+                }}
+              >
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '2px' }}>{opt.label}</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{opt.desc}</div>
+              </button>
+            ))}
           </div>
 
           {/* Form Card */}

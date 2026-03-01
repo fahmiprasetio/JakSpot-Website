@@ -4,7 +4,7 @@ import { verifyPassword, signToken, setAuthCookie } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, role } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json(
@@ -31,8 +31,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Verify role match
+    if (role === 'admin' && user.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Akun ini bukan akun administrator.' },
+        { status: 403 }
+      );
+    }
+    if (role === 'user' && user.role === 'admin') {
+      // Admin can still login as admin via user login — just send their role back
+    }
+
     // Sign token & set cookie
-    const token = signToken({ userId: user.id, email: user.email });
+    const token = signToken({ userId: user.id, email: user.email, role: user.role });
     await setAuthCookie(token);
 
     return NextResponse.json({
@@ -43,6 +54,7 @@ export async function POST(req: NextRequest) {
         email: user.email,
         bio: user.bio,
         avatar: user.avatar,
+        role: user.role,
       },
     });
   } catch (error) {

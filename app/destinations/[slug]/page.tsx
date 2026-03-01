@@ -7,6 +7,7 @@ import Navbar from "../../components/Navbar";
 import destinations, { getDestinationBySlug } from "../../data/destinations";
 import type { DestinationDetail } from "../../data/destinations";
 import { useFavorites } from "../../context/FavoritesContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Footer = dynamic(() => import("../../components/Footer"), { ssr: true });
 
@@ -20,7 +21,95 @@ export default function DestinationDetailPage() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { user } = useAuth();
   const favorited = destination ? isFavorite(destination.slug) : false;
+
+  // Review state
+  interface Review { id: string; userId: string; userName: string; destinationSlug: string; rating: number; comment: string; createdAt: string; }
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+
+  // Edit review state
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [editRating, setEditRating] = useState(5);
+  const [editComment, setEditComment] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
+
+  const startEditReview = (rev: Review) => {
+    setEditingReviewId(rev.id);
+    setEditRating(rev.rating);
+    setEditComment(rev.comment);
+  };
+
+  const cancelEdit = () => {
+    setEditingReviewId(null);
+    setEditRating(5);
+    setEditComment('');
+  };
+
+  const submitEditReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingReviewId) return;
+    setEditLoading(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editingReviewId, rating: editRating, comment: editComment }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setReviews(prev => prev.map(r => r.id === editingReviewId ? data.review : r));
+        cancelEdit();
+      }
+    } catch {}
+    setEditLoading(false);
+  };
+
+  const deleteReview = async (id: string) => {
+    if (!confirm('Yakin mau hapus review ini?')) return;
+    try {
+      const res = await fetch(`/api/reviews?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setReviews(prev => prev.filter(r => r.id !== id));
+      }
+    } catch {}
+  };
+
+  // Fetch reviews
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`/api/reviews?slug=${slug}`)
+      .then(r => r.json())
+      .then(data => setReviews(data.reviews || []))
+      .catch(() => {});
+  }, [slug]);
+
+  const submitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) { window.location.href = '/signin'; return; }
+    setReviewError('');
+    setReviewLoading(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ destinationSlug: slug, rating: reviewRating, comment: reviewComment }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setReviews(prev => [data.review, ...prev]);
+        setReviewComment('');
+        setReviewRating(5);
+      } else {
+        setReviewError(data.error || 'Gagal kirim review.');
+      }
+    } catch { setReviewError('Koneksi error.'); }
+    setReviewLoading(false);
+  };
 
   // Scroll reveal
   useEffect(() => {
@@ -191,42 +280,7 @@ export default function DestinationDetailPage() {
             Semua Destinasi
           </a>
 
-          {/* Favorite button */}
-          <button
-            onClick={() => toggleFavorite(destination.slug)}
-            className="reveal"
-            style={{
-              position: "absolute",
-              top: "90px",
-              right: "clamp(20px, 5vw, 60px)",
-              zIndex: 10,
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              color: "white",
-              fontSize: "0.9rem",
-              fontWeight: 500,
-              padding: "10px 18px",
-              borderRadius: "50px",
-              background: favorited ? "rgba(255,59,48,0.7)" : "rgba(0,0,0,0.35)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              transition: "all 0.3s ease",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              if (!favorited) e.currentTarget.style.background = "rgba(255,59,48,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              if (!favorited) e.currentTarget.style.background = "rgba(0,0,0,0.35)";
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill={favorited ? "white" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-            {favorited ? "Favorit" : "Simpan"}
-          </button>
+
 
           {/* Hero title overlay */}
           <div
@@ -310,17 +364,49 @@ export default function DestinationDetailPage() {
             <div>
               {/* Description */}
               <div className="reveal">
-                <h2
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.8rem",
-                    fontWeight: 700,
-                    marginBottom: "20px",
-                    color: "var(--foreground)",
-                  }}
-                >
-                  Tentang Tempat Ini
-                </h2>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+                  <h2
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.8rem",
+                      fontWeight: 700,
+                      margin: 0,
+                      color: "var(--foreground)",
+                    }}
+                  >
+                    Tentang Tempat Ini
+                  </h2>
+                  <button
+                    onClick={() => toggleFavorite(destination.slug)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      color: favorited ? 'white' : 'var(--foreground)',
+                      fontSize: '0.9rem',
+                      fontWeight: 500,
+                      padding: '10px 20px',
+                      borderRadius: '50px',
+                      background: favorited ? 'rgba(255,59,48,0.85)' : 'var(--dark-surface-2)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!favorited) e.currentTarget.style.background = 'rgba(255,59,48,0.15)';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!favorited) e.currentTarget.style.background = 'var(--dark-surface-2)';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill={favorited ? 'white' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    {favorited ? 'Tersimpan' : 'Simpan'}
+                  </button>
+                </div>
                 <p
                   style={{
                     color: "var(--text-muted)",
@@ -753,6 +839,164 @@ export default function DestinationDetailPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ====== REVIEWS SECTION ====== */}
+        <section style={{ background: 'var(--background)', padding: '0 5% 80px' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div className="reveal" style={{ marginBottom: '32px' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 700, marginBottom: '8px' }}>
+                Review dari <span className="gradient-text">Pengunjung</span>
+              </h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                {reviews.length > 0 ? `${reviews.length} review` : 'Belum ada review. Jadilah yang pertama!'}
+              </p>
+            </div>
+
+            {/* Write review form */}
+            <div className="reveal" style={{ background: 'var(--dark-surface-2)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
+              {user ? (
+                <form onSubmit={submitReview}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'var(--gradient-1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: 'white' }}>
+                      {user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{user.name}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Tulis review lo</div>
+                    </div>
+                  </div>
+                  {/* Star Rating */}
+                  <div style={{ display: 'flex', gap: '6px', marginBottom: '14px' }}>
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <button key={star} type="button" onClick={() => setReviewRating(star)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', fontSize: '1.4rem', transition: 'transform 0.2s' }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      >
+                        {star <= reviewRating ? '⭐' : '☆'}
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Ceritain pengalaman lo di sini..."
+                    required
+                    rows={3}
+                    style={{ width: '100%', padding: '14px 16px', borderRadius: '12px', border: '2px solid var(--dark-surface-3)', background: 'var(--dark-surface)', color: 'var(--foreground)', fontSize: '0.9rem', outline: 'none', transition: 'border-color 0.3s', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-surface-3)'}
+                  />
+                  {reviewError && <p style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '8px' }}>{reviewError}</p>}
+                  <button type="submit" disabled={reviewLoading} className="btn-primary" style={{ marginTop: '14px', padding: '10px 24px', fontSize: '0.85rem', fontWeight: 600, cursor: reviewLoading ? 'not-allowed' : 'pointer', opacity: reviewLoading ? 0.7 : 1 }}>
+                    {reviewLoading ? 'Mengirim...' : 'Kirim Review'}
+                  </button>
+                </form>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '16px' }}>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '16px' }}>
+                    Login dulu buat nulis review 🔒
+                  </p>
+                  <a href="/signin" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: '12px', background: 'rgba(255,107,53,0.1)', border: '1px solid rgba(255,107,53,0.2)', color: 'var(--primary)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600 }}>
+                    Login
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Reviews list — max 3 shown */}
+            {reviews.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {reviews.slice(0, 3).map((rev) => (
+                  <div key={rev.id} className="reveal" style={{ background: 'var(--dark-surface-2)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    {editingReviewId === rev.id ? (
+                      /* Edit mode */
+                      <form onSubmit={submitEditReview}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'var(--gradient-1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700, color: 'white' }}>
+                            {rev.userName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{rev.userName}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Mengedit review</div>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+                          {[1, 2, 3, 4, 5].map(star => (
+                            <button key={star} type="button" onClick={() => setEditRating(star)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', fontSize: '1.2rem' }}>
+                              {star <= editRating ? '⭐' : '☆'}
+                            </button>
+                          ))}
+                        </div>
+                        <textarea value={editComment} onChange={(e) => setEditComment(e.target.value)} required rows={2}
+                          style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid var(--primary)', background: 'var(--dark-surface)', color: 'var(--foreground)', fontSize: '0.9rem', outline: 'none', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                        />
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+                          <button type="submit" disabled={editLoading} className="btn-primary" style={{ padding: '8px 20px', fontSize: '0.8rem', fontWeight: 600, cursor: editLoading ? 'not-allowed' : 'pointer' }}>
+                            {editLoading ? 'Menyimpan...' : 'Simpan'}
+                          </button>
+                          <button type="button" onClick={cancelEdit} style={{ padding: '8px 20px', fontSize: '0.8rem', fontWeight: 600, background: 'var(--dark-surface-3)', border: 'none', borderRadius: '10px', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                            Batal
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      /* View mode */
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: user && rev.userId === user.id ? 'var(--gradient-1)' : 'var(--dark-surface-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700, color: user && rev.userId === user.id ? 'white' : 'var(--text-muted)' }}>
+                            {rev.userName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{rev.userName}</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ fontSize: '0.8rem' }}>{'⭐'.repeat(rev.rating)}</span>
+                              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                {new Date(rev.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                              </span>
+                            </div>
+                          </div>
+                          {/* Edit/Delete buttons for own reviews */}
+                          {user && rev.userId === user.id && (
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                              <button onClick={() => startEditReview(rev)} title="Edit" style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)', transition: 'all 0.2s' }}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,107,53,0.15)'; e.currentTarget.style.color = 'var(--primary)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                              </button>
+                              <button onClick={() => deleteReview(rev.id)} title="Hapus" style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)', transition: 'all 0.2s' }}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,59,48,0.15)'; e.currentTarget.style.color = '#ff3b30'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <p style={{ color: 'var(--foreground)', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
+                          {rev.comment}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                ))}
+
+                {/* See more link */}
+                {reviews.length > 3 && (
+                  <div style={{ textAlign: 'center', marginTop: '8px' }}>
+                    <a href={`/destinations/${slug}/reviews`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 28px', borderRadius: '50px', background: 'var(--dark-surface-2)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--primary)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.3s ease' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,107,53,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,107,53,0.3)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--dark-surface-2)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+                    >
+                      Lihat Semua Review ({reviews.length})
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
 

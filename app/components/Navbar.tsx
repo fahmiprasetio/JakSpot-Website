@@ -256,10 +256,10 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', zIndex: 1001 }}>
             {user ? (
               <a
-                href="/profile"
+                href={user.role === 'admin' ? '/admin' : '/profile'}
                 style={{
                   width: '34px', height: '34px', borderRadius: '10px',
-                  background: 'var(--gradient-1)',
+                  background: user.role === 'admin' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'var(--gradient-1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontWeight: 700, fontSize: '0.8rem', color: 'white',
                   textDecoration: 'none', transition: 'transform 0.3s',
@@ -408,15 +408,24 @@ const Navbar = ({ variant = 'homepage' }: { variant?: 'homepage' | 'subpage' }) 
           transition: `all 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${navLinks.length * 0.08 + 0.15}s`,
         }}>
           {user ? (
-            <a href="/profile" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'var(--foreground)' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--gradient-1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
-                {user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
-              </div>
-              <div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600 }}>{user.name}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Lihat Profil</div>
-              </div>
-            </a>
+            <>
+              <a href={user.role === 'admin' ? '/admin' : '/profile'} onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'var(--foreground)' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: user.role === 'admin' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'var(--gradient-1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
+                  {user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                </div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600 }}>{user.name}</div>
+                  <div style={{ fontSize: '0.8rem', color: user.role === 'admin' ? '#818cf8' : 'var(--text-muted)' }}>
+                    {user.role === 'admin' ? '🔧 Administrator' : 'Lihat Profil'}
+                  </div>
+                </div>
+              </a>
+              {user.role === 'admin' && (
+                <a href="/profile" onClick={() => setMenuOpen(false)} style={{ display: 'block', marginTop: '12px', padding: '10px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', textDecoration: 'none', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                  👤 Lihat Profil
+                </a>
+              )}
+            </>
           ) : (
             <div style={{ display: 'flex', gap: '12px' }}>
               <a href="/signin" onClick={() => setMenuOpen(false)} style={{ padding: '12px 28px', borderRadius: '12px', background: 'white', color: '#0a0a0f', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block' }}>

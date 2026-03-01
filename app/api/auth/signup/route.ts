@@ -4,7 +4,7 @@ import { hashPassword, signToken, setAuthCookie } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, role } = await req.json();
 
     // Validation
     if (!name || !email || !password) {
@@ -32,16 +32,17 @@ export async function POST(req: NextRequest) {
 
     // Create user
     const hashedPassword = await hashPassword(password);
-    const user = await userDB.create({ name, email, password: hashedPassword });
+    const userRole = role === 'admin' ? 'admin' : 'user';
+    const user = await userDB.create({ name, email, password: hashedPassword, role: userRole });
 
     // Sign token & set cookie
-    const token = signToken({ userId: user.id, email: user.email });
+    const token = signToken({ userId: user.id, email: user.email, role: user.role });
     await setAuthCookie(token);
 
     return NextResponse.json(
       {
         message: 'Akun lo berhasil dibuat!',
-        user: { id: user.id, name: user.name, email: user.email },
+        user: { id: user.id, name: user.name, email: user.email, role: user.role },
       },
       { status: 201 }
     );
