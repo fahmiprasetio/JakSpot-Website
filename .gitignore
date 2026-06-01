@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# local agents
+/.agents/
+
 # production
 /build
 

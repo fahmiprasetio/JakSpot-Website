@@ -5,19 +5,30 @@ import { FavoritesProvider } from "./context/FavoritesContext";
 
 export const metadata: Metadata = {
   title: "JakSpot - Jelajahi Pesona Jakarta",
-  description: "Portal informasi lengkap tentang Jakarta. Temukan destinasi wisata, kuliner khas Betawi, dan budaya Jakarta dalam satu platform digital yang memukau.",
-  keywords: ["Jakarta", "wisata Jakarta", "kuliner Betawi", "budaya Jakarta", "Monas", "Kota Tua", "travel Indonesia"],
+  description:
+    "Portal informasi lengkap tentang Jakarta. Temukan destinasi wisata, kuliner khas Betawi, dan budaya Jakarta dalam satu platform digital yang memukau.",
+  keywords: [
+    "Jakarta",
+    "wisata Jakarta",
+    "kuliner Betawi",
+    "budaya Jakarta",
+    "Monas",
+    "Kota Tua",
+    "travel Indonesia",
+  ],
   authors: [{ name: "JakSpot Team" }],
   openGraph: {
     title: "JakSpot - Jelajahi Pesona Jakarta",
-    description: "Portal informasi lengkap tentang Jakarta dengan pengalaman visual yang memukau",
+    description:
+      "Portal informasi lengkap tentang Jakarta dengan pengalaman visual yang memukau",
     type: "website",
     locale: "id_ID",
   },
   twitter: {
     card: "summary_large_image",
     title: "JakSpot - Jelajahi Pesona Jakarta",
-    description: "Portal informasi lengkap tentang Jakarta dengan pengalaman visual yang memukau",
+    description:
+      "Portal informasi lengkap tentang Jakarta dengan pengalaman visual yang memukau",
   },
 };
 
@@ -36,13 +47,15 @@ export default function RootLayout({
     <html lang="id">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
         <AuthProvider>
-          <FavoritesProvider>
-            {children}
-          </FavoritesProvider>
+          <FavoritesProvider>{children}</FavoritesProvider>
         </AuthProvider>
       </body>
     </html>
