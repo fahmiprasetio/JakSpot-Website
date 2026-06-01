@@ -32,8 +32,3 @@ Buat file `.env` atau `.env.local` dengan:
 ```env
 JWT_SECRET=your-super-secret-jwt-key-min-32-characters
 ```
-
-## Catatan
-
-- Jika port 3000 dipakai, Next akan pindah ke port lain.
-- Di Windows, bila Turbopack bermasalah, dev server lebih stabil dengan mode default setelah cache dibersihkan.
