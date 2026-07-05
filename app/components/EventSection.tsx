@@ -2,70 +2,20 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-interface EventItem {
-    id: number;
-    title: string;
-    category: string;
-    date: string;
-    location: string;
-    description: string;
-    image: string;
-    videoSrc?: string; // Will be used later when videos are ready
-}
-
-const events: EventItem[] = [
-    {
-        id: 1,
-        title: 'Jakarta Fair (PRJ)',
-        category: 'Festival',
-        date: 'Juni - Juli 2026',
-        location: 'JIExpo Kemayoran',
-        description: 'Tiap tahun hadir, tiap tahun lo balik lagi. Wahana, konser, dan ribuan booth yang bikin kantong jebol tapi happy.',
-        image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1920&q=80',
-    },
-    {
-        id: 2,
-        title: 'Java Jazz Festival',
-        category: 'Musik',
-        date: 'Maret 2026',
-        location: 'JIExpo Kemayoran',
-        description: 'Tiga hari, ratusan artis, satu kota. Ngaku suka jazz tapi belum pernah ke sini? Pertanyain dirimu.',
-        image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=1920&q=80',
-    },
-    {
-        id: 3,
-        title: 'Djakarta Warehouse Project',
-        category: 'Musik',
-        date: 'Desember 2026',
-        location: 'JIExpo Kemayoran',
-        description: 'EDM festival terbesar di Asia Tenggara ada di Jakarta. Drop bassnya bikin dada getar, literally.',
-        image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1920&q=80',
-    },
-    {
-        id: 4,
-        title: 'Art Jakarta',
-        category: 'Seni',
-        date: 'Agustus 2026',
-        location: 'Jakarta Convention Center',
-        description: 'Pameran seni kontemporer terbesar se-Indonesia. Foto aesthetic dijamin, tapi lo bakal genuinely terkesima juga.',
-        image: 'https://images.unsplash.com/photo-1577720643272-265f434e5f4e?auto=format&fit=crop&w=1920&q=80',
-    },
-    {
-        id: 5,
-        title: 'Festival Palang Pintu',
-        category: 'Budaya',
-        date: 'Juni 2026',
-        location: 'Kemang, Jakarta Selatan',
-        description: 'Pencak silat, ondel-ondel, dan tradisi Betawi yang masih hidup. Ini bagian dari kota lo, ketauin dulu.',
-        image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1920&q=80',
-    },
-];
+import type { EventDetail } from '../data/events';
 
 const EventSection = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
+    const [events, setEvents] = useState<EventDetail[]>([]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        fetch('/api/events')
+            .then(r => r.json())
+            .then(data => setEvents(data.events || []));
+    }, []);
 
     // Reveal animation
     useEffect(() => {
@@ -124,6 +74,8 @@ const EventSection = () => {
     };
 
     const currentEvent = events[activeIndex];
+
+    if (events.length === 0) return null;
 
     return (
         <section
@@ -309,7 +261,7 @@ const EventSection = () => {
                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                         <circle cx="12" cy="10" r="3" />
                                     </svg>
-                                    {currentEvent.location}
+                                    {currentEvent.venue}
                                 </div>
                             </div>
                         </div>

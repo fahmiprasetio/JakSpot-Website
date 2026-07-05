@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import Navbar from '../components/Navbar';
-import allEvents from '../data/events';
 import type { EventDetail } from '../data/events';
 
 const Footer = dynamic(() => import('../components/Footer'), { ssr: true });
@@ -15,11 +14,23 @@ const ITEMS_PER_PAGE = 6;
 const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
 export default function EventPage() {
+  const [allEvents, setAllEvents] = useState<EventDetail[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('Semua');
   const [viewMode, setViewMode] = useState<'grid' | 'timeline'>('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const contentRef = useRef<HTMLDivElement>(null);
   const [featuredIndex, setFeaturedIndex] = useState(0);
+
+  useEffect(() => {
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(data => {
+        setAllEvents(data.events || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const featuredEvents = allEvents.filter((e) => e.isFeatured);
 
@@ -436,7 +447,11 @@ export default function EventPage() {
           </div>
 
           {/* ====== GRID VIEW ====== */}
-          {viewMode === 'grid' && (
+          {loading ? (
+            <div style={{ textAlign: "center", padding: "80px 20px", color: "var(--text-muted)" }}>
+              <p>Memuat event...</p>
+            </div>
+          ) : viewMode === 'grid' && (
             <div
               style={{
                 display: 'grid',
@@ -453,7 +468,7 @@ export default function EventPage() {
           )}
 
           {/* ====== GRID PAGINATION ====== */}
-          {viewMode === 'grid' && totalPages > 1 && (
+          {!loading && viewMode === 'grid' && totalPages > 1 && (
             <div
               style={{
                 display: 'flex',
@@ -543,7 +558,7 @@ export default function EventPage() {
           )}
 
           {/* ====== TIMELINE VIEW ====== */}
-          {viewMode === 'timeline' && (
+          {!loading && viewMode === 'timeline' && (
             <div style={{ maxWidth: '900px', margin: '0 auto' }}>
               {/* Month bar */}
               <div
@@ -733,7 +748,7 @@ export default function EventPage() {
           )}
 
           {/* Empty State */}
-          {filteredEvents.length === 0 && (
+          {!loading && filteredEvents.length === 0 && (
             <div
               style={{
                 textAlign: 'center',

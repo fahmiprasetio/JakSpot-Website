@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Navbar from "../../components/Navbar";
-import destinations, { getDestinationBySlug } from "../../data/destinations";
 import type { DestinationDetail } from "../../data/destinations";
 import { useFavorites } from "../../context/FavoritesContext";
 import { useAuth } from "../../context/AuthContext";
@@ -15,7 +14,34 @@ export default function DestinationDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = typeof params.slug === "string" ? params.slug : "";
-  const destination = getDestinationBySlug(slug);
+  
+  const [destination, setDestination] = useState<DestinationDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [related, setRelated] = useState<DestinationDetail[]>([]);
+
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`/api/destinations/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.destination) {
+          setDestination(data.destination);
+          fetch('/api/destinations')
+            .then(r => r.json())
+            .then(allData => {
+              const all = allData.destinations || [];
+              setRelated(
+                all.filter((d: DestinationDetail) => d.category === data.destination.category && d.slug !== slug).slice(0, 3)
+              );
+              setLoading(false);
+            })
+            .catch(() => setLoading(false));
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(() => setLoading(false));
+  }, [slug]);
 
   const [activeImage, setActiveImage] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -145,6 +171,17 @@ export default function DestinationDetailPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  if (loading) {
+    return (
+      <>
+        <Navbar variant="subpage" />
+        <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--background)" }}>
+          <p style={{ color: "var(--text-muted)" }}>Memuat destinasi...</p>
+        </main>
+      </>
+    );
+  }
+
   if (!destination) {
     return (
       <>
@@ -184,13 +221,6 @@ export default function DestinationDetailPage() {
       </>
     );
   }
-
-  // Related destinations — same category, excluding current
-  const related = destinations
-    .filter(
-      (d) => d.category === destination.category && d.id !== destination.id,
-    )
-    .slice(0, 3);
 
   return (
     <>

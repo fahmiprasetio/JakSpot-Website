@@ -1,79 +1,12 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { useFavorites } from "../context/FavoritesContext";
-
-interface Destination {
-  id: number;
-  name: string;
-  slug: string;
-  category: string;
-  image: string;
-  description: string;
-  hoverImage?: string;
-}
-
-const destinations: Destination[] = [
-  {
-    id: 1,
-    name: "Sarang Semut",
-    slug: "sarang-semut",
-    category: "Arts",
-    image: "/Destination/Cafe, Bar, and Eatery/sarang-semut.jpg",
-    description: "Vibes gua aesthetic di Cikini yang teksturnya unik parah",
-    hoverImage: "/Destination/Cafe, Bar, and Eatery/sarang-semut2.jpg",
-  },
-  {
-    id: 2,
-    name: "Smiljan Makarya",
-    slug: "smiljan-makarya",
-    category: "Arts",
-    image: "/Destination/Cafe, Bar, and Eatery/Smiljan Makarya.jpeg",
-    description:
-      "Gallery-cafe fusion di Jakarta Selatan yang vibe-nya benar-benar beda",
-    hoverImage: "/Destination/Cafe, Bar, and Eatery/Smiljan Makarya 2.jpeg",
-  },
-  {
-    id: 3,
-    name: "Tsuki at the Alley",
-    slug: "tsuki-at-the-alley",
-    category: "Chill",
-    image: "/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley.jpg",
-    description: "Gang tersembunyi di Kemang yang punya nuansa malam Tokyo",
-    hoverImage: "/Destination/Cafe, Bar, and Eatery/Tsuki at the Alley 2.jpg",
-  },
-  {
-    id: 4,
-    name: "Salty Salty",
-    slug: "salty-salty-pik",
-    category: "Skyline",
-    image: "/Destination/Cafe, Bar, and Eatery/Salty Salty.jpg",
-    description: "Rooftop di Menteng yang golden hour-nya gak ada obat",
-    hoverImage: "/Destination/Cafe, Bar, and Eatery/Salty Salty 2.jpg",
-  },
-  {
-    id: 5,
-    name: "Toko Kopi Maru",
-    slug: "toko-kopi-maru",
-    category: "Chill",
-    image: "/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru.jpeg",
-    description: "Hidden gem di Pasar Baru dengan suasana vintage yang calming",
-    hoverImage: "/Destination/Cafe, Bar, and Eatery/Toko Kopi Maru 2.jpeg",
-  },
-  {
-    id: 6,
-    name: "Chandra Naya",
-    slug: "chandra-naya",
-    category: "Culture",
-    image: "/Destination/Chandra Naya.jpg",
-    description: "Bangunan bersejarah dengan arsitektur Tionghoa yang otentik",
-    hoverImage: "/Destination/Chandra Naya 2.jpg",
-  },
-];
+import type { DestinationDetail } from "../data/destinations";
 
 // --------------- Card sub-component ---------------
 interface DestinationCardProps {
-  destination: Destination;
+  destination: DestinationDetail;
   index: number;
 }
 
@@ -326,14 +259,14 @@ const DestinationCard = ({ destination, index }: DestinationCardProps) => {
 const DestinationsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState("Semua");
-  const filters = [
-    "Semua",
-    "Skyline",
-    "Arsitektur",
-    "Chill",
-    "Arts",
-    "Culture",
-  ];
+  const [destinations, setDestinations] = useState<DestinationDetail[]>([]);
+  const filters = ["Semua", "Kopi", "Cafe", "Bar", "Resto", "Budaya"];
+
+  useEffect(() => {
+    fetch('/api/destinations')
+      .then(r => r.json())
+      .then(data => setDestinations(data.destinations || []));
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

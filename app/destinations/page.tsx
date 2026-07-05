@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Navbar from "../components/Navbar";
-import allDestinations from "../data/destinations";
+import type { DestinationDetail } from "../data/destinations";
 import { useFavorites } from "../context/FavoritesContext";
 
 const Footer = dynamic(() => import("../components/Footer"), { ssr: true });
@@ -13,7 +13,7 @@ const ITEMS_PER_PAGE = 9;
 
 // --------------- Card sub-component ---------------
 interface DestinationCardProps {
-  destination: (typeof allDestinations)[number];
+  destination: DestinationDetail;
   index: number;
 }
 
@@ -304,9 +304,21 @@ function DestinationCard({ destination, index }: DestinationCardProps) {
 // ---------------------------------------------------
 
 export default function DestinationsPage() {
+  const [allDestinations, setAllDestinations] = useState<DestinationDetail[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("Semua");
   const [currentPage, setCurrentPage] = useState(1);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch('/api/destinations')
+      .then(res => res.json())
+      .then(data => {
+        setAllDestinations(data.destinations || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   // Reveal animation — re-observe when filter or page changes
   useEffect(() => {
@@ -520,26 +532,32 @@ export default function DestinationsPage() {
           </div>
 
           {/* Destinations Grid */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-              gap: "30px",
-              maxWidth: "1400px",
-              margin: "0 auto",
-            }}
-          >
-            {paginatedDestinations.map((destination, index) => (
-              <DestinationCard
-                key={destination.id}
-                destination={destination}
-                index={index}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div style={{ textAlign: "center", padding: "80px 20px", color: "var(--text-muted)" }}>
+              <p style={{ fontSize: "1.1rem" }}>Memuat destinasi...</p>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+                gap: "30px",
+                maxWidth: "1400px",
+                margin: "0 auto",
+              }}
+            >
+              {paginatedDestinations.map((destination, index) => (
+                <DestinationCard
+                  key={destination.id}
+                  destination={destination}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Empty State */}
-          {filteredDestinations.length === 0 && (
+          {!loading && filteredDestinations.length === 0 && (
             <div
               style={{
                 textAlign: "center",

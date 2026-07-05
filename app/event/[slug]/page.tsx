@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '../../components/Navbar';
-import allEvents, { getEventBySlug } from '../../data/events';
 import type { EventDetail } from '../../data/events';
 
 const Footer = dynamic(() => import('../../components/Footer'), { ssr: true });
@@ -12,7 +11,34 @@ const Footer = dynamic(() => import('../../components/Footer'), { ssr: true });
 export default function EventDetailPage() {
   const params = useParams();
   const slug = typeof params.slug === 'string' ? params.slug : '';
-  const event = getEventBySlug(slug);
+  
+  const [event, setEvent] = useState<EventDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [related, setRelated] = useState<EventDetail[]>([]);
+
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`/api/events/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.event) {
+          setEvent(data.event);
+          fetch('/api/events')
+            .then(r => r.json())
+            .then(allData => {
+              const all = allData.events || [];
+              setRelated(
+                all.filter((e: EventDetail) => e.category === data.event.category && e.slug !== slug).slice(0, 3)
+              );
+              setLoading(false);
+            })
+            .catch(() => setLoading(false));
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(() => setLoading(false));
+  }, [slug]);
 
   const [activeImage, setActiveImage] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -52,6 +78,17 @@ export default function EventDetailPage() {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar variant="subpage" />
+        <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--background)" }}>
+          <p style={{ color: "var(--text-muted)" }}>Memuat event...</p>
+        </main>
+      </>
+    );
+  }
 
   if (!event) {
     return (
@@ -98,11 +135,6 @@ export default function EventDetailPage() {
       </>
     );
   }
-
-  // Related events — same category, excluding current
-  const related = allEvents
-    .filter((e) => e.category === event.category && e.id !== event.id)
-    .slice(0, 3);
 
   const handleShare = async () => {
     const url = window.location.href;
