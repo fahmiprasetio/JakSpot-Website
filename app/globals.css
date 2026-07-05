@@ -302,10 +302,20 @@ body {
 }
 
 /* Reveal on Scroll */
+@keyframes revealAuto {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(60px);
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Fallback: pastikan konten tetap tampil walau toggle .active (JS) telat
+     karena data di-fetch dari API setelah mount. */
+  animation: revealAuto 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
 }
 
 .reveal.active {
@@ -313,15 +323,13 @@ body {
   transform: translateY(0);
 }
 
-/* ===== Fix: kartu list dimuat async, toggle .active bisa keburu jalan ===== */
-/* Kartu di /destinations dan /event di-fetch dari API setelah mount, jadi
-   toggle .reveal -> .active bisa jalan sebelum kartunya ada, bikin kartu
-   nyangkut di opacity:0. Paksa wrapper kartu ini selalu terlihat. */
+/* Kartu list dimuat async, paksa selalu terlihat */
 .destination-card.reveal,
 .reveal:has(.event-card-inner),
 .reveal:has(.event-timeline-card) {
   opacity: 1 !important;
   transform: none !important;
+  animation: none !important;
 }
 
 /* Navbar Styles */
