@@ -313,6 +313,17 @@ body {
   transform: translateY(0);
 }
 
+/* ===== Fix: kartu list dimuat async, toggle .active bisa keburu jalan ===== */
+/* Kartu di /destinations dan /event di-fetch dari API setelah mount, jadi
+   toggle .reveal -> .active bisa jalan sebelum kartunya ada, bikin kartu
+   nyangkut di opacity:0. Paksa wrapper kartu ini selalu terlihat. */
+.destination-card.reveal,
+.reveal:has(.event-card-inner),
+.reveal:has(.event-timeline-card) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* Navbar Styles */
 .navbar {
   position: fixed;
