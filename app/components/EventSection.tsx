@@ -45,7 +45,6 @@ const EventSection = () => {
   const goToSlide = useCallback((index: number) => setActiveIndex(index), []);
 
   const nextSlide = useCallback(() => {
-    setEvents((cur) => cur);
     setActiveIndex((prev) => (events.length ? (prev + 1) % events.length : 0));
   }, [events.length]);
 
@@ -77,15 +76,7 @@ const EventSection = () => {
     >
       {/* Section Header */}
       <div className="reveal" style= textAlign: 'center', marginBottom: '60px', padding: '0 5%' >
-        <span
-          style=
-            color: 'var(--accent)',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-          
-        >
+        <span style= color: 'var(--accent)', fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' >
           What&apos;s Happening
         </span>
         <h2 className="section-title" style= marginTop: '16px' >
@@ -128,22 +119,8 @@ const EventSection = () => {
           ))}
 
           {/* Gradient Overlays */}
-          <div
-            style=
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
-              zIndex: 2,
-            
-          />
-          <div
-            style=
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)',
-              zIndex: 2,
-            
-          />
+          <div style= position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)', zIndex: 2  />
+          <div style= position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)', zIndex: 2  />
 
           {/* Content Overlay */}
           <div
@@ -191,28 +168,12 @@ const EventSection = () => {
                 {currentEvent.title}
               </h3>
 
-              <p
-                style=
-                  color: 'rgba(255,255,255,0.8)',
-                  fontSize: '1rem',
-                  lineHeight: 1.7,
-                  marginBottom: '20px',
-                
-              >
+              <p style= color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '20px' >
                 {currentEvent.description}
               </p>
 
               <div style= display: 'flex', gap: '24px', flexWrap: 'wrap' >
-                <div
-                  style=
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    color: 'var(--accent)',
-                    fontSize: '0.9rem',
-                    fontWeight: 500,
-                  
-                >
+                <div style= display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent)', fontSize: '0.9rem', fontWeight: 500 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
@@ -221,16 +182,7 @@ const EventSection = () => {
                   </svg>
                   {currentEvent.date}
                 </div>
-                <div
-                  style=
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    color: 'rgba(255,255,255,0.7)',
-                    fontSize: '0.9rem',
-                    fontWeight: 500,
-                  
-                >
+                <div style= display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: 500 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                     <circle cx="12" cy="10" r="3" />
@@ -245,19 +197,7 @@ const EventSection = () => {
               <button
                 onClick={prevSlide}
                 aria-label="Sebelumnya"
-                style=
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  color: 'white',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                
+                style= width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' 
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -266,19 +206,7 @@ const EventSection = () => {
               <button
                 onClick={nextSlide}
                 aria-label="Berikutnya"
-                style=
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  color: 'white',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                
+                style= width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' 
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M12 5l7 7-7 7" />
@@ -288,17 +216,7 @@ const EventSection = () => {
           </div>
 
           {/* Progress Bar */}
-          <div
-            style=
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: '3px',
-              background: 'rgba(255,255,255,0.1)',
-              zIndex: 3,
-            
-          >
+          <div style= position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: 'rgba(255,255,255,0.1)', zIndex: 3 >
             <div
               style={{
                 height: '100%',
@@ -328,7 +246,6 @@ const EventSection = () => {
                 opacity: index === activeIndex ? 1 : 0.5,
                 background: 'none',
                 padding: 0,
-                transition: 'all 0.3s ease',
               
             >
               <img
@@ -337,13 +254,6 @@ const EventSection = () => {
                 loading="lazy"
                 decoding="async"
                 style= width: '100%', height: '100%', objectFit: 'cover' 
-              />
-              <div
-                style=
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)',
-                
               />
               <span
                 style=
