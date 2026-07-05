@@ -3,7 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -13,6 +15,77 @@ model User {
   password  String
   bio       String?
   avatar    String?
+  role      String   @default("user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  reviews   Review[]
+}
+
+model Review {
+  id              String   @id @default(cuid())
+  userId          String
+  userName        String
+  destinationSlug String
+  rating          Int
+  comment         String
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([destinationSlug])
+  @@index([userId])
+}
+
+model Destination {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  name            String
+  category        String
+  location        String
+  address         String
+  image           String
+  hoverImage      String?
+  gallery         String[]
+  description     String
+  longDescription String
+  highlights      String[]
+  priceRange      String
+  openHours       String
+  lat             Float
+  lng             Float
+  tips            String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+}
+
+model Event {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  category        String
+  date            String
+  dateStart       String
+  dateEnd         String?
+  time            String
+  location        String
+  venue           String
+  address         String
+  image           String
+  gallery         String[]
+  description     String
+  longDescription String
+  highlights      String[]
+  lineup          String[] @default([])
+  ticketPrice     String
+  ticketLink      String?
+  lat             Float
+  lng             Float
+  tips            String[]
+  isFeatured      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+  @@index([isFeatured])
 }

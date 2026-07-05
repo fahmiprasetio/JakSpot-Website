@@ -1,38 +1,10 @@
-import { createClient } from '@libsql/client';
+import { PrismaClient } from '@prisma/client';
 
-const db = createClient({
-  url: `file:${process.cwd().replace(/\\/g, '/')}/dev.db`,
-});
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-// Helper to generate CUID-like IDs
-function generateId(): string {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 10);
-  return `c${timestamp}${random}`;
-}
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-// Auto-migrate: add role column if missing, create Review table
-(async () => {
-  try {
-    // Add role column
-    await db.execute({ sql: `ALTER TABLE User ADD COLUMN role TEXT NOT NULL DEFAULT 'user'`, args: [] });
-  } catch { /* column already exists */ }
-  try {
-    await db.execute({
-      sql: `CREATE TABLE IF NOT EXISTS Review (
-        id TEXT PRIMARY KEY,
-        userId TEXT NOT NULL,
-        userName TEXT NOT NULL,
-        destinationSlug TEXT NOT NULL,
-        rating INTEGER NOT NULL,
-        comment TEXT NOT NULL,
-        createdAt TEXT NOT NULL,
-        FOREIGN KEY (userId) REFERENCES User(id)
-      )`,
-      args: [],
-    });
-  } catch { /* table already exists */ }
-})();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export type UserRole = 'user' | 'admin';
 
@@ -58,89 +30,116 @@ export interface Review {
   createdAt: string;
 }
 
+type UserRecord = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  bio: string | null;
+  avatar: string | null;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type ReviewRecord = {
+  id: string;
+  userId: string;
+  userName: string;
+  destinationSlug: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+};
+
+function mapUser(u: UserRecord): User {
+  return {
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    password: u.password,
+    bio: u.bio,
+    avatar: u.avatar,
+    role: (u.role as UserRole) || 'user',
+    createdAt: u.createdAt.toISOString(),
+    updatedAt: u.updatedAt.toISOString(),
+  };
+}
+
+function mapReview(r: ReviewRecord): Review {
+  return {
+    id: r.id,
+    userId: r.userId,
+    userName: r.userName,
+    destinationSlug: r.destinationSlug,
+    rating: r.rating,
+    comment: r.comment,
+    createdAt: r.createdAt.toISOString(),
+  };
+}
+
 export const userDB = {
   async findByEmail(email: string): Promise<User | null> {
-    const result = await db.execute({
-      sql: 'SELECT * FROM User WHERE email = ?',
-      args: [email],
-    });
-    if (result.rows.length === 0) return null;
-    const row = result.rows[0] as unknown as User;
-    return { ...row, role: (row.role || 'user') as UserRole };
+    const u = await prisma.user.findUnique({ where: { email } });
+    return u ? mapUser(u) : null;
   },
 
   async findById(id: string): Promise<Omit<User, 'password'> | null> {
-    const result = await db.execute({
-      sql: 'SELECT id, name, email, bio, avatar, role, createdAt, updatedAt FROM User WHERE id = ?',
-      args: [id],
-    });
-    if (result.rows.length === 0) return null;
-    const row = result.rows[0] as unknown as Omit<User, 'password'>;
-    return { ...row, role: (row.role || 'user') as UserRole };
+    const u = await prisma.user.findUnique({ where: { id } });
+    if (!u) return null;
+    const { password: _password, ...rest } = mapUser(u);
+    void _password;
+    return rest;
   },
 
   async create(data: { name: string; email: string; password: string; role?: UserRole }): Promise<User> {
-    const id = generateId();
-    const now = new Date().toISOString();
-    const role = data.role || 'user';
-    await db.execute({
-      sql: 'INSERT INTO User (id, name, email, password, role, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      args: [id, data.name, data.email, data.password, role, now, now],
+    const u = await prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        role: data.role || 'user',
+      },
     });
-    return { id, name: data.name, email: data.email, password: data.password, bio: null, avatar: null, role, createdAt: now, updatedAt: now };
+    return mapUser(u);
   },
 
   async update(id: string, data: Record<string, string>): Promise<Omit<User, 'password'> | null> {
-    const now = new Date().toISOString();
-    const fields = { ...data, updatedAt: now };
-    const setClauses = Object.keys(fields).map(k => `${k} = ?`).join(', ');
-    const values = Object.values(fields);
-    
-    await db.execute({
-      sql: `UPDATE User SET ${setClauses} WHERE id = ?`,
-      args: [...values, id],
+    await prisma.user.update({
+      where: { id },
+      data: data as unknown as { name?: string; email?: string; bio?: string; avatar?: string; password?: string; role?: string },
     });
-    
-    return this.findById(id);
+    return userDB.findById(id);
   },
 };
 
 export const reviewDB = {
   async findByDestination(slug: string): Promise<Review[]> {
-    const result = await db.execute({
-      sql: 'SELECT * FROM Review WHERE destinationSlug = ? ORDER BY createdAt DESC',
-      args: [slug],
+    const rows = await prisma.review.findMany({
+      where: { destinationSlug: slug },
+      orderBy: { createdAt: 'desc' },
     });
-    return result.rows as unknown as Review[];
+    return rows.map(mapReview);
   },
 
   async create(data: { userId: string; userName: string; destinationSlug: string; rating: number; comment: string }): Promise<Review> {
-    const id = generateId();
-    const now = new Date().toISOString();
-    await db.execute({
-      sql: 'INSERT INTO Review (id, userId, userName, destinationSlug, rating, comment, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      args: [id, data.userId, data.userName, data.destinationSlug, data.rating, data.comment, now],
-    });
-    return { id, ...data, createdAt: now };
+    const r = await prisma.review.create({ data });
+    return mapReview(r);
   },
 
   async delete(id: string): Promise<void> {
-    await db.execute({ sql: 'DELETE FROM Review WHERE id = ?', args: [id] });
+    await prisma.review.delete({ where: { id } });
   },
 
   async findById(id: string): Promise<Review | null> {
-    const result = await db.execute({ sql: 'SELECT * FROM Review WHERE id = ?', args: [id] });
-    return (result.rows[0] as unknown as Review) || null;
+    const r = await prisma.review.findUnique({ where: { id } });
+    return r ? mapReview(r) : null;
   },
 
   async update(id: string, data: { rating: number; comment: string }): Promise<Review | null> {
-    await db.execute({
-      sql: 'UPDATE Review SET rating = ?, comment = ? WHERE id = ?',
-      args: [data.rating, data.comment, id],
-    });
-    const result = await db.execute({ sql: 'SELECT * FROM Review WHERE id = ?', args: [id] });
-    return (result.rows[0] as unknown as Review) || null;
+    const r = await prisma.review.update({ where: { id }, data });
+    return mapReview(r);
   },
 };
 
-export default db;
+export default prisma;
