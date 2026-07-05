@@ -17,8 +17,12 @@
 /.next/
 /out/
 
-# local agents
+# local agents / skills
 /.agents/
+skills-lock.json
+
+# editor
+.vscode/
 
 # production
 /build
