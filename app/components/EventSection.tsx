@@ -34,7 +34,7 @@ const EventSection = () => {
         revealElements?.forEach((el) => observer.observe(el));
 
         return () => observer.disconnect();
-    }, []);
+    }, [events.length]);
 
     const goToSlide = useCallback((index: number) => {
         if (isTransitioning) return;
@@ -44,15 +44,18 @@ const EventSection = () => {
     }, [isTransitioning]);
 
     const nextSlide = useCallback(() => {
+        if (events.length === 0) return;
         goToSlide((activeIndex + 1) % events.length);
-    }, [activeIndex, goToSlide]);
+    }, [activeIndex, goToSlide, events.length]);
 
     const prevSlide = useCallback(() => {
+        if (events.length === 0) return;
         goToSlide((activeIndex - 1 + events.length) % events.length);
-    }, [activeIndex, goToSlide]);
+    }, [activeIndex, goToSlide, events.length]);
 
     // Auto-play
     useEffect(() => {
+        if (events.length === 0) return;
         autoPlayRef.current = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % events.length);
         }, 6000);
@@ -60,7 +63,7 @@ const EventSection = () => {
         return () => {
             if (autoPlayRef.current) clearInterval(autoPlayRef.current);
         };
-    }, []);
+    }, [events.length]);
 
     // Pause auto-play on hover
     const pauseAutoPlay = () => {
@@ -68,47 +71,48 @@ const EventSection = () => {
     };
 
     const resumeAutoPlay = () => {
+        if (events.length === 0) return;
         autoPlayRef.current = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % events.length);
         }, 6000);
     };
 
-    const currentEvent = events[activeIndex];
-
     if (events.length === 0) return null;
+
+    const currentEvent = events[activeIndex] ?? events[0];
 
     return (
         <section
             id="events"
             ref={sectionRef}
             className="section"
-            style={{
+            style=
                 background: 'var(--background)',
                 position: 'relative',
                 overflow: 'hidden',
                 padding: '60px 0',
-            }}
+            
         >
             {/* Section Header */}
-            <div className="reveal" style={{
+            <div className="reveal" style=
                 textAlign: 'center',
                 marginBottom: '60px',
                 padding: '0 5%',
-            }}>
-                <span style={{
+            >
+                <span style=
                     color: 'var(--accent)',
                     fontSize: '0.9rem',
                     fontWeight: '600',
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em',
-                }}>
+                >
                     What&apos;s Happening
                 </span>
-                <h2 className="section-title" style={{ marginTop: '16px' }}>
+                <h2 className="section-title" style= marginTop: '16px' >
                     Event &<br />
                     <span className="gradient-text">Festival</span>
                 </h2>
-                <p className="section-subtitle" style={{ margin: '0 auto' }}>
+                <p className="section-subtitle" style= margin: '0 auto' >
                     Jakarta gak pernah sepi. Tiap bulan ada aja yang worth it buat lo datengin — ini yang paling gak boleh lo skip.
                 </p>
             </div>
@@ -118,34 +122,34 @@ const EventSection = () => {
                 className="reveal"
                 onMouseEnter={pauseAutoPlay}
                 onMouseLeave={resumeAutoPlay}
-                style={{
+                style=
                     position: 'relative',
                     width: '100%',
                     maxWidth: '1400px',
                     margin: '0 auto',
                     padding: '0 5%',
-                }}
+                
             >
                 {/* Main Slide */}
-                <div style={{
+                <div style=
                     position: 'relative',
                     width: '100%',
                     height: '550px',
                     borderRadius: '24px',
                     overflow: 'hidden',
-                }}>
+                >
                     {/* Background Images - all rendered, only active visible */}
                     {events.map((event, index) => (
                         <div
                             key={event.id}
-                            style={{
+                            style=
                                 position: 'absolute',
                                 inset: 0,
                                 opacity: index === activeIndex ? 1 : 0,
                                 transform: index === activeIndex ? 'scale(1)' : 'scale(1.05)',
                                 transition: 'opacity 0.6s ease, transform 4s ease',
                                 zIndex: index === activeIndex ? 1 : 0,
-                            }}
+                            
                         >
                             {/* Image or Video placeholder */}
                             <img
@@ -153,31 +157,31 @@ const EventSection = () => {
                                 alt={event.title}
                                 loading="lazy"
                                 decoding="async"
-                                style={{
+                                style=
                                     width: '100%',
                                     height: '100%',
                                     objectFit: 'cover',
-                                }}
+                                
                             />
                         </div>
                     ))}
 
                     {/* Gradient Overlay */}
-                    <div style={{
+                    <div style=
                         position: 'absolute',
                         inset: 0,
                         background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
                         zIndex: 2,
-                    }} />
-                    <div style={{
+                     />
+                    <div style=
                         position: 'absolute',
                         inset: 0,
                         background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)',
                         zIndex: 2,
-                    }} />
+                     />
 
                     {/* Content Overlay */}
-                    <div style={{
+                    <div style=
                         position: 'absolute',
                         bottom: '50px',
                         left: '50px',
@@ -186,11 +190,11 @@ const EventSection = () => {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'flex-end',
-                    }}>
+                    >
                         {/* Left - Event Info */}
-                        <div style={{ maxWidth: '550px' }}>
+                        <div style= maxWidth: '550px' >
                             {/* Category Badge */}
-                            <span style={{
+                            <span style=
                                 display: 'inline-block',
                                 background: 'var(--gradient-1)',
                                 padding: '6px 16px',
@@ -201,46 +205,46 @@ const EventSection = () => {
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.05em',
                                 marginBottom: '16px',
-                            }}>
+                            >
                                 {currentEvent.category}
                             </span>
 
                             {/* Title */}
-                            <h3 style={{
+                            <h3 style=
                                 fontFamily: 'var(--font-display)',
                                 fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
                                 fontWeight: '700',
                                 color: 'white',
                                 lineHeight: '1.2',
                                 marginBottom: '12px',
-                            }}>
+                            >
                                 {currentEvent.title}
                             </h3>
 
                             {/* Description */}
-                            <p style={{
+                            <p style=
                                 color: 'rgba(255,255,255,0.8)',
                                 fontSize: '1rem',
                                 lineHeight: '1.7',
                                 marginBottom: '20px',
-                            }}>
+                            >
                                 {currentEvent.description}
                             </p>
 
                             {/* Date & Location */}
-                            <div style={{
+                            <div style=
                                 display: 'flex',
                                 gap: '24px',
                                 flexWrap: 'wrap',
-                            }}>
-                                <div style={{
+                            >
+                                <div style=
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '8px',
                                     color: 'var(--accent)',
                                     fontSize: '0.9rem',
                                     fontWeight: '500',
-                                }}>
+                                >
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                         <line x1="16" y1="2" x2="16" y2="6" />
@@ -249,14 +253,14 @@ const EventSection = () => {
                                     </svg>
                                     {currentEvent.date}
                                 </div>
-                                <div style={{
+                                <div style=
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '8px',
                                     color: 'rgba(255,255,255,0.7)',
                                     fontSize: '0.9rem',
                                     fontWeight: '500',
-                                }}>
+                                >
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                         <circle cx="12" cy="10" r="3" />
@@ -267,13 +271,13 @@ const EventSection = () => {
                         </div>
 
                         {/* Right - Navigation */}
-                        <div style={{
+                        <div style=
                             display: 'flex',
                             gap: '12px',
-                        }}>
+                        >
                             <button
                                 onClick={prevSlide}
-                                style={{
+                                style=
                                     width: '48px',
                                     height: '48px',
                                     borderRadius: '50%',
@@ -286,7 +290,7 @@ const EventSection = () => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     transition: 'all 0.3s ease',
-                                }}
+                                
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.background = 'var(--primary)';
                                     e.currentTarget.style.borderColor = 'var(--primary)';
@@ -302,7 +306,7 @@ const EventSection = () => {
                             </button>
                             <button
                                 onClick={nextSlide}
-                                style={{
+                                style=
                                     width: '48px',
                                     height: '48px',
                                     borderRadius: '50%',
@@ -315,7 +319,7 @@ const EventSection = () => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     transition: 'all 0.3s ease',
-                                }}
+                                
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.background = 'var(--primary)';
                                     e.currentTarget.style.borderColor = 'var(--primary)';
@@ -333,7 +337,7 @@ const EventSection = () => {
                     </div>
 
                     {/* Progress Bar */}
-                    <div style={{
+                    <div style=
                         position: 'absolute',
                         bottom: 0,
                         left: 0,
@@ -341,7 +345,7 @@ const EventSection = () => {
                         height: '3px',
                         background: 'rgba(255,255,255,0.1)',
                         zIndex: 3,
-                    }}>
+                    >
                         <div style={{
                             height: '100%',
                             width: `${((activeIndex + 1) / events.length) * 100}%`,
@@ -352,18 +356,18 @@ const EventSection = () => {
                 </div>
 
                 {/* Thumbnail Navigation */}
-                <div style={{
+                <div style=
                     display: 'flex',
                     gap: '16px',
                     marginTop: '24px',
                     overflowX: 'auto',
                     paddingBottom: '8px',
-                }}>
+                >
                     {events.map((event, index) => (
                         <button
                             key={event.id}
                             onClick={() => goToSlide(index)}
-                            style={{
+                            style=
                                 flexShrink: 0,
                                 width: '200px',
                                 height: '70px',
@@ -378,27 +382,27 @@ const EventSection = () => {
                                 transition: 'all 0.3s ease',
                                 background: 'none',
                                 padding: 0,
-                            }}
+                            
                         >
                             <img
                                 src={event.image}
                                 alt={event.title}
                                 loading="lazy"
                                 decoding="async"
-                                style={{
+                                style=
                                     width: '100%',
                                     height: '100%',
                                     objectFit: 'cover',
-                                }}
+                                
                             />
-                            <div style={{
+                            <div style=
                                 position: 'absolute',
                                 inset: 0,
                                 background: index === activeIndex
                                     ? 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)'
                                     : 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%)',
-                            }} />
-                            <span style={{
+                             />
+                            <span style=
                                 position: 'absolute',
                                 bottom: '8px',
                                 left: '10px',
@@ -410,7 +414,7 @@ const EventSection = () => {
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                            }}>
+                            >
                                 {event.title}
                             </span>
                         </button>
@@ -418,11 +422,11 @@ const EventSection = () => {
                 </div>
 
                 {/* View All Button */}
-                <div style={{ textAlign: 'center', marginTop: '48px' }}>
+                <div style= textAlign: 'center', marginTop: '48px' >
                     <a
                         href="/event"
                         className="btn-secondary"
-                        style={{ textDecoration: 'none' }}
+                        style= textDecoration: 'none' 
                     >
                         Lihat Semua Event
                     </a>
